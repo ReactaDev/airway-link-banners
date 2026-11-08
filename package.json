@@ -1,0 +1,31 @@
+{
+  "name": "airwaylink-banner-studio",
+  "version": "0.08.0",
+  "description": "Airwaylink Banner Studio v0.08 // Virtual Airline Banner Tool",
+  "scripts": {
+    "start": "vite --port 5173 --strictPort",
+    "dev": "npm start",
+    "build": "vite build",
+    "preview": "vite preview --port 4173 --strictPort"
+  },
+  "keywords": [
+    "virtual-airline",
+    "banner-generator",
+    "airwaylink",
+    "aviation"
+  ],
+  "author": "Airwaylink",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@auth0/auth0-react": "^2.30.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "postcss": "^8.5.32",
+    "tailwindcss": "^3.4.19",
+    "vite": "^7.3.7"
+  }
+}

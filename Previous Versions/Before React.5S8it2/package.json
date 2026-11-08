@@ -1,0 +1,17 @@
+{
+  "name": "airwaylink-banner-studio",
+  "version": "0.08.0",
+  "description": "Airwaylink Banner Studio v0.08 // Virtual Airline Banner Tool",
+  "main": "Airwaylink Banner Studio.html",
+  "scripts": {
+    "start": "npx serve ."
+  },
+  "keywords": [
+    "virtual-airline",
+    "banner-generator",
+    "airwaylink",
+    "aviation"
+  ],
+  "author": "Airwaylink",
+  "license": "MIT"
+}
