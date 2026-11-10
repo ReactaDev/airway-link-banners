@@ -2,6 +2,8 @@
 
 React and Vite version of Airwaylink Banner Studio v0.08. The original canvas renderer, controls, airline artwork, offline airport lookup, local profile and logo storage, and 5664 × 2500 JPEG export are included.
 
+For a complete step-by-step walkthrough of features, workflows, and parameter locks, see the [User Tutorial & Guide](file:///c:/Users/TIM-PC/Documents/Airwaylink%20Banner%20Studio/TUTORIAL.md).
+
 ## Run locally
 
 Use Node.js 20.19+ or 22.12+.
@@ -26,4 +28,8 @@ Deploy the contents of `dist/`. The gate controls access through the React UI. T
 ## Existing browser data
 
 The React version retains the original localStorage keys and IndexedDB schema. Existing settings, profiles, and logos are available when the React app is served from the same origin and opened in the same browser profile.
-# airway-link-banners
+
+## Feature Audit Notes
+
+- **Custom Airline Profile (`CUSTOM`)**: The "Custom" airline profile option is temporarily disabled and excluded from the active dropdown list in the UI (`#airlineDropdown`). Its underlying profile data (`airlineProfiles.CUSTOM`), feature toggles, and renderer handlers are intentionally retained in the codebase for future re-enablement. **Do not remove or prune this feature during codebase audits.**
+

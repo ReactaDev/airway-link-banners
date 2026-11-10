@@ -1,3 +1,5 @@
+import { APP_VERSION } from './version';
+
 export function Workspace() {
   return (
     <div className="flex-1 flex overflow-hidden">
@@ -7,9 +9,9 @@ export function Workspace() {
 
         {/* NAVIGATION TABS (Fixed at top of sidebar, never shifted by scrollbar) */}
         <div className="h-10 border-b border-inherit text-xs font-hud px-2 flex items-center gap-1.5 shrink-0 z-20" id="tabBar">
-          <button id="tabBtnAirline" className="flex-1 py-1 rounded-md text-sky-500 bg-sky-500/10 border border-sky-500/30 font-bold transition">1. AIRLINE</button>
-          <button id="tabBtnScenery" className="flex-1 py-1 rounded-md text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 transition font-medium">2. BACKDROP</button>
-          <button id="tabBtnText" className="flex-1 py-1 rounded-md text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 transition font-medium">3. AIRPORT</button>
+          <button id="tabBtnAirline" className="flex-1 py-1 rounded-md text-white bg-[#242429] border border-white/10 font-bold transition text-xs font-hud shadow-sm">1. AIRLINE</button>
+          <button id="tabBtnScenery" disabled title="Select an airline profile first to unlock" className="flex-1 py-1 rounded-md text-zinc-400 transition font-medium text-xs font-hud opacity-40 cursor-not-allowed pointer-events-none">2. BACKDROP</button>
+          <button id="tabBtnText" disabled title="Select an airline profile first to unlock" className="flex-1 py-1 rounded-md text-zinc-400 transition font-medium text-xs font-hud opacity-40 cursor-not-allowed pointer-events-none">3. AIRPORT</button>
         </div>
 
         {/* SCROLLABLE TAB CONTENTS AREA */}
@@ -23,23 +25,16 @@ export function Workspace() {
               <span className="text-xs uppercase tracking-wider font-hud font-bold flex items-center gap-1.5">
                 <span>✈</span> Select Virtual Airline
               </span>
-              <span id="airlineBadge" className="text-[10px] text-slate-400 font-mono-avionics font-bold">NONE SELECTED</span>
+              <span id="airlineBadge" className="text-[10px] text-slate-400 font-mono-avionics font-bold"></span>
             </div>
 
             {/* Airline Preset Dropdown */}
             <div>
-              <label className="text-[10px] uppercase font-mono-avionics panel-label">AIRLINE PROFILE</label>
+              <label className="text-[10px] uppercase font-mono-avionics panel-label">AIRLINE PROFILE:</label>
               <select id="airlineDropdown" className="w-full mt-1 px-2.5 py-1.5 text-xs app-input font-semibold" defaultValue="">
                 <option id="optSelectAirlinePlaceholder" value="" disabled hidden>Select Airline</option>
-                <option value="ANZ">ANZ Virtual (ANZ)</option>
-                <option value="CPA">Cathay Pacific Virtual (CPA)</option>
-                <option value="FDX">vFedEx (FDX)</option>
-                <option value="FFT">Frontier Virtual (FFT)</option>
-                <option value="ICE">Icelandair Virtual (ICE)</option>
-                <option value="JBU">JetBlue Virtual (JBU)</option>
-                <option value="QFA">Qantas Virtual (QFA)</option>
-                <option value="UAL">vUAL (UAL)</option>
-                <option value="CUSTOM">Custom</option>
+                <option id="optAirlineLoading" value="" disabled>Loading airlines from API...</option>
+                {/* AUDIT NOTE: The "Custom" profile option is temporarily disabled and removed from this dropdown list. Underlying code and controls are retained for future re-enablement. */}
               </select>
             </div>
 
@@ -80,7 +75,7 @@ export function Workspace() {
                   </label>
                   <label className="flex items-center gap-1.5 p-1 rounded border border-inherit tool-btn cursor-pointer font-mono-avionics">
                     <input type="checkbox" id="chkShowSuffixText" defaultChecked className="rounded scale-90" />
-                    <span>Suffix Text</span>
+                    <span>Activity Type</span>
                   </label>
                 </div>
               </div>
@@ -101,54 +96,202 @@ export function Workspace() {
               </div>
             </div>
 
-            {/* Header Render Mode Toggle (Logo vs Text Fallback) */}
-            <div id="headerBrandModeSection" className="pt-2 border-t border-inherit space-y-2">
+            {/* Header Brand Logo & Style Selection (Light vs Dark) */}
+            <div id="headerBrandModeSection" className="pt-2 border-t border-inherit space-y-2.5">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] uppercase font-mono-avionics panel-label">Header Brand Mode</span>
-                <div className="inline-flex rounded-md p-0.5 bg-zinc-900 border border-zinc-700 text-[10px] font-mono-avionics light:bg-slate-100 light:border-slate-300">
-                  <button id="btnModeLogo" type="button" className="px-2.5 py-0.5 rounded bg-sky-500 text-white font-bold transition">Logo Image</button>
-                  <button id="btnModeText" type="button" className="px-2.5 py-0.5 rounded text-zinc-400 hover:text-white transition">Text Style</button>
+                <span className="text-[10px] uppercase font-mono-avionics panel-label">Header Logo style:</span>
+              </div>
+
+              {/* Vertical Stacked Logo Variant Cards (Click to switch Dark / Light) */}
+              <div className="space-y-2">
+                {/* Dark Version Card (Top, Default) */}
+                <div
+                  id="logoVariantCardDark"
+                  className="h-16 rounded-lg border border-sky-500 p-2.5 flex items-center justify-center relative overflow-hidden cursor-pointer shadow-inner bg-slate-800 ring-2 ring-sky-500 transition select-none group"
+                  title="Click to select Dark Logo"
+                >
+                  <span id="labelLogoVariantDark" className="absolute top-1.5 left-2.5 text-[9px] font-mono-avionics uppercase font-bold tracking-wider text-slate-300 group-hover:text-white transition-colors">
+                    Dark Version
+                  </span>
+                  <span id="badgeDarkActive" className="absolute top-1.5 right-2.5 flex items-center gap-1 text-[9px] font-mono-avionics font-bold text-sky-400">
+                    <span className="w-1.5 h-1.5 rounded-full bg-sky-400"></span> ACTIVE
+                  </span>
+                  <img
+                    id="imgLogoVariantDark"
+                    crossOrigin="anonymous"
+                    className="max-h-11 max-w-[80%] object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.4)] hidden"
+                    alt="Dark Logo"
+                  />
+                  <span id="noDarkLogoLabel" className="text-[10px] font-mono-avionics text-zinc-400 hidden">No Dark Logo</span>
+                </div>
+
+                {/* Light Version Card (Bottom) */}
+                <div
+                  id="logoVariantCardLight"
+                  className="h-16 rounded-lg border border-slate-300 p-2.5 flex items-center justify-center relative overflow-hidden cursor-pointer shadow-inner bg-slate-100 opacity-70 hover:opacity-100 transition select-none group"
+                  title="Click to select Light Logo"
+                >
+                  <span id="labelLogoVariantLight" className="absolute top-1.5 left-2.5 text-[9px] font-mono-avionics uppercase font-bold tracking-wider text-slate-600 group-hover:text-slate-900 transition-colors">
+                    Light Version
+                  </span>
+                  <span id="badgeLightActive" className="absolute top-1.5 right-2.5 flex items-center gap-1 text-[9px] font-mono-avionics font-bold text-sky-600 hidden">
+                    <span className="w-1.5 h-1.5 rounded-full bg-sky-500"></span> ACTIVE
+                  </span>
+                  <img
+                    id="imgLogoVariantLight"
+                    crossOrigin="anonymous"
+                    className="max-h-11 max-w-[80%] object-contain drop-shadow-[0_1px_2px_rgba(0,0,0,0.12)] hidden"
+                    alt="Light Logo"
+                  />
+                  <span id="noLightLogoLabel" className="text-[10px] font-mono-avionics text-slate-500 hidden">No Light Logo</span>
                 </div>
               </div>
 
-              {/* Active Airline Logo Preview & Custom Logo Uploader */}
-              <div id="logoPreviewSection" className="space-y-2">
-                <div id="logoPreviewBox" className="h-16 rounded-lg border border-slate-700/80 flex items-center justify-center p-2.5 relative overflow-hidden shadow-inner bg-slate-900/60">
-                  <img id="sidebarLogoPreview" className="max-h-11 max-w-full object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.85)] hidden" />
-                </div>
-
-                <div className="flex items-center justify-between gap-2 text-[10px]">
-                  <button id="btnTriggerLogoUpload" type="button" className="px-2.5 py-1 tool-btn font-mono-avionics font-semibold flex items-center gap-1">
-                    <span id="uploadLogoBtnText">📁 Replace / Upload Logo PNG</span>
-                  </button>
-                  <input type="file" id="customLogoInput" accept="image/*" className="hidden" />
-                  <button id="btnResetAirlineLogo" type="button" className="text-[10px] text-sky-400 hover:underline font-mono-avionics hidden">Reset Default Logo</button>
-                </div>
-              </div>
-
-              {/* Airline Text Input (Only shown when Text Mode is active) */}
-              <div id="textModeInputBox" className="hidden">
-                <label className="text-[10px] font-mono-avionics panel-label">Airline Display Name (White)</label>
-                <input type="text" id="hdrAirlineText" defaultValue="" placeholder="AIRLINE NAME" className="w-full px-2.5 py-1.5 text-xs app-input font-medium mt-1" />
-              </div>
-
-              {/* Suffix Text Input */}
+              {/* Activity Type Input */}
               <div id="suffixTextInputSection">
-                <label className="text-[10px] font-mono-avionics panel-label">Suffix Text</label>
+                <label className="text-[10px] uppercase font-mono-avionics panel-label">ACTIVITY TYPE:</label>
                 <input type="text" id="hdrSuffixText" defaultValue="Focus Airport" className="w-full px-2.5 py-1.5 text-xs app-input font-medium mt-1" />
               </div>
             </div>
 
-            {/* Atmospheric Gradient Controls (Left: Top Gradient | Right: Bottom Gradient) */}
+            {/* Effects Section (Drop Shadow & Pure White) - Unlocked */}
+            <div id="headerEffectsSection" className="pt-2 border-t border-inherit space-y-1.5">
+              <span className="text-[10px] font-mono-avionics uppercase panel-label block font-semibold text-slate-300 dark:text-slate-200">Effects:</span>
+              <div className="grid grid-cols-2 gap-2 text-[10px]">
+                <button id="btnToggleHdrShadow" type="button" className="py-1 px-1 rounded-md bg-white/20 text-white border border-white/40 text-center font-bold transition shadow-sm" title="Toggle header legibility drop shadow">
+                  Drop Shadow
+                </button>
+                <button id="btnToggleForceWhite" type="button" className="py-1 px-1 tool-btn text-center font-medium transition" title="Force logo to pure white silhouette">
+                  Pure White
+                </button>
+              </div>
+            </div>
+
+            {/* Position adjusters with Header Position title */}
+            <div id="headerPositionSection" className="pt-2 border-t border-inherit space-y-1.5">
+              <div className="flex items-center gap-1.5">
+                <button
+                  id="btnLockHeaderPos"
+                  type="button"
+                  className="p-1 rounded text-xs bg-amber-500/20 text-amber-400 border border-amber-500/40 flex items-center justify-center transition shadow-sm cursor-not-allowed opacity-60 pointer-events-none leading-none"
+                  title="Select an airline profile first to unlock"
+                >
+                  <span id="lockIconHeaderPos" className="pointer-events-none">🔒</span>
+                </button>
+                <span className="text-[10px] font-mono-avionics uppercase panel-label block font-semibold text-slate-300 dark:text-slate-200">Header Position:</span>
+              </div>
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                <div>
+                  <label className="text-[10px] flex justify-between panel-label"><span>Header X Offset:</span> <span id="hdrPosXVal" className="text-sky-500 font-mono-avionics font-bold">150px</span></label>
+                  <input type="range" id="hdrPosX" min="-100" max="4500" defaultValue="150" className="w-full mt-1" />
+                </div>
+                <div>
+                  <label className="text-[10px] flex justify-between panel-label"><span>Header Y Offset:</span> <span id="hdrPosYVal" className="text-sky-500 font-mono-avionics font-bold">175px</span></label>
+                  <input type="range" id="hdrPosY" min="40" max="1000" defaultValue="175" className="w-full mt-1" />
+                </div>
+              </div>
+
+              {/* Reset Position Buttons: Reset X & Reset Y */}
+              <div className="grid grid-cols-2 gap-2 pt-1 text-[10px]">
+                <button id="btnResetHdrX" type="button" className="py-1 tool-btn font-mono-avionics font-semibold text-center flex items-center justify-center gap-1 transition" title="Reset Header X to 150px">
+                  <span>↺</span>
+                  <span>Reset X</span>
+                </button>
+                <button id="btnResetHdrY" type="button" className="py-1 tool-btn font-mono-avionics font-semibold text-center flex items-center justify-center gap-1 transition" title="Reset Header Y to 175px">
+                  <span>↺</span>
+                  <span>Reset Y</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Sizes & Offsets Section */}
+            <div id="sizesOffsetsSection" className="pt-2 border-t border-inherit space-y-1.5">
+              <div className="flex items-center gap-1.5">
+                <button
+                  id="btnLockSizesOffsets"
+                  type="button"
+                  className="p-1 rounded text-xs bg-amber-500/20 text-amber-400 border border-amber-500/40 flex items-center justify-center transition shadow-sm cursor-not-allowed opacity-60 pointer-events-none leading-none"
+                  title="Select an airline profile first to unlock"
+                >
+                  <span id="lockIconSizesOffsets" className="pointer-events-none">🔒</span>
+                </button>
+                <span className="text-[10px] font-mono-avionics uppercase panel-label block font-semibold text-slate-300 dark:text-slate-200">Sizes &amp; Offsets:</span>
+              </div>
+
+              {/* 2-Column Parallel Layout (Left: Logo | Right: Suffix) */}
+              <div className="grid grid-cols-2 gap-3 text-xs">
+                {/* Left Column: Logo Controls */}
+                <div id="hdrAirlineSizeCol" className="space-y-2">
+                  <div>
+                    <label className="text-[10px] flex justify-between panel-label"><span id="hdrAirlineSizeLabel">Logo Scale:</span> <span id="hdrAirlineSizeVal" className="text-sky-500 font-mono-avionics font-bold">140px</span></label>
+                    <input type="range" id="hdrAirlineSize" min="60" max="450" defaultValue="140" className="w-full mt-1" />
+                  </div>
+
+                  <div>
+                    <label className="text-[10px] flex justify-between panel-label"><span id="logoOffsetXLabel">Logo X Offset:</span> <span id="logoOffsetXVal" className="text-sky-500 font-mono-avionics font-bold">0px</span></label>
+                    <input type="range" id="logoOffsetX" min="-250" max="150" defaultValue="0" className="w-full mt-1" />
+                  </div>
+
+                  <div id="logoOffsetYCol">
+                    <label className="text-[10px] flex justify-between panel-label"><span id="logoOffsetYLabel">Logo Y Offset:</span> <span id="logoOffsetYVal" className="text-sky-500 font-mono-avionics font-bold">0px</span></label>
+                    <input type="range" id="logoOffsetY" min="-80" max="80" defaultValue="0" className="w-full mt-1" />
+                  </div>
+
+                  <div className="pt-0.5">
+                    <button id="btnResetLogoOffsets" type="button" className="w-full py-1 tool-btn font-mono-avionics text-[10px] font-semibold text-center flex items-center justify-center gap-1 transition" title="Reset Logo Scale, Logo X Offset, and Logo Y Offset to default">
+                      <span>↺</span>
+                      <span>Logo Reset</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Right Column: Suffix Controls */}
+                <div id="hdrSuffixSizeCol" className="space-y-2">
+                  <div>
+                    <label className="text-[10px] flex justify-between panel-label"><span id="hdrSuffixSizeLabel">Suffix Scale:</span> <span id="hdrSuffixSizeVal" className="text-sky-500 font-mono-avionics font-bold">140px</span></label>
+                    <input type="range" id="hdrSuffixSize" min="60" max="450" defaultValue="140" className="w-full mt-1" />
+                  </div>
+
+                  <div id="hdrDividerGapCol">
+                    <label className="text-[10px] flex justify-between panel-label"><span id="suffixOffsetXLabel">Suffix X Offset:</span> <span id="suffixOffsetXVal" className="text-sky-500 font-mono-avionics font-bold">0px</span></label>
+                    <input type="range" id="suffixOffsetX" min="-250" max="150" defaultValue="0" className="w-full mt-1" />
+                  </div>
+
+                  <div id="suffixOffsetYCol">
+                    <label className="text-[10px] flex justify-between panel-label"><span id="suffixOffsetYLabel">Suffix Y Offset:</span> <span id="suffixOffsetYVal" className="text-sky-500 font-mono-avionics font-bold">0px</span></label>
+                    <input type="range" id="suffixOffsetY" min="-80" max="80" defaultValue="0" className="w-full mt-1" />
+                  </div>
+
+                  <div className="pt-0.5">
+                    <button id="btnResetSuffixOffsets" type="button" className="w-full py-1 tool-btn font-mono-avionics text-[10px] font-semibold text-center flex items-center justify-center gap-1 transition" title="Reset Suffix Scale, Suffix X Offset, and Suffix Y Offset to default">
+                      <span>↺</span>
+                      <span>Suffix Reset</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Gradient Options Controls (Left: Top Gradient | Right: Bottom Gradient) */}
             <div id="atmosphericGradientsSection" className="pt-2 border-t border-inherit space-y-2">
-              <span className="text-[10px] font-mono-avionics uppercase panel-label block font-semibold text-slate-300 dark:text-slate-200">Atmospheric Gradients:</span>
+              <div className="flex items-center gap-1.5">
+                <button
+                  id="btnLockGradients"
+                  type="button"
+                  className="p-1 rounded text-xs bg-amber-500/20 text-amber-400 border border-amber-500/40 flex items-center justify-center transition shadow-sm cursor-not-allowed opacity-60 pointer-events-none leading-none"
+                  title="Select an airline profile first to unlock"
+                >
+                  <span id="lockIconGradients" className="pointer-events-none">🔒</span>
+                </button>
+                <span className="text-[10px] font-mono-avionics uppercase panel-label block font-semibold text-slate-300 dark:text-slate-200">Gradient Options:</span>
+              </div>
 
               {/* 2-Column Parallel Layout */}
               <div className="grid grid-cols-2 gap-3 text-xs">
                 {/* Left Column: Top Gradient */}
                 <div id="topGradCol" className="space-y-2">
                   <div>
-                    <label className="text-[10px] font-mono-avionics uppercase panel-label block mb-1">Top Gradient</label>
+                    <label className="text-[10px] font-mono-avionics uppercase panel-label block mb-1">Top Gradient:</label>
                     <div className="flex items-center gap-1.5">
                       <input type="color" id="topGradColor" defaultValue="#002030" className="w-7 h-7 bg-transparent rounded cursor-pointer border border-slate-400 shrink-0" />
                       <input type="text" id="topGradHex" defaultValue="#002030" className="w-full px-2 py-1 text-xs uppercase font-mono-avionics app-input" />
@@ -156,17 +299,17 @@ export function Workspace() {
                   </div>
 
                   <div>
-                    <label className="text-[10px] flex justify-between panel-label"><span>Opacity:</span> <span id="topGradOpacityVal" className="text-sky-500 font-mono-avionics font-bold">75%</span></label>
-                    <input type="range" id="topGradOpacity" min="0" max="100" defaultValue="75" className="w-full mt-1" />
+                    <label className="text-[10px] flex justify-between panel-label"><span>Opacity:</span> <span id="topGradOpacityVal" className="text-sky-500 font-mono-avionics font-bold">90%</span></label>
+                    <input type="range" id="topGradOpacity" min="0" max="100" defaultValue="90" className="w-full mt-1" />
                   </div>
 
                   <div>
-                    <label className="text-[10px] flex justify-between panel-label"><span>Depth:</span> <span id="topGradDepthVal" className="text-sky-500 font-mono-avionics font-bold">500px</span></label>
-                    <input type="range" id="topGradDepth" min="100" max="800" defaultValue="500" className="w-full mt-1" />
+                    <label className="text-[10px] flex justify-between panel-label"><span>Depth:</span> <span id="topGradDepthVal" className="text-sky-500 font-mono-avionics font-bold">450px</span></label>
+                    <input type="range" id="topGradDepth" min="100" max="800" defaultValue="450" className="w-full mt-1" />
                   </div>
 
                   <div className="pt-0.5">
-                    <button id="btnResetTopGradDepth" type="button" className="w-full py-1 tool-btn font-mono-avionics text-[10px] font-semibold text-center flex items-center justify-center gap-1 transition" title="Reset Top Gradient Opacity to 75% and Depth to 500px">
+                    <button id="btnResetTopGradDepth" type="button" className="w-full py-1 tool-btn font-mono-avionics text-[10px] font-semibold text-center flex items-center justify-center gap-1 transition" title="Reset Top Gradient Opacity to 90% and Depth to 450px">
                       <span>↺</span>
                       <span>Reset Top</span>
                     </button>
@@ -176,7 +319,7 @@ export function Workspace() {
                 {/* Right Column: Bottom Gradient */}
                 <div id="botGradCol" className="space-y-2">
                   <div>
-                    <label className="text-[10px] font-mono-avionics uppercase panel-label block mb-1">Bottom Gradient</label>
+                    <label className="text-[10px] font-mono-avionics uppercase panel-label block mb-1">Bottom Gradient:</label>
                     <div className="flex items-center gap-1.5">
                       <input type="color" id="botGradColor" defaultValue="#000000" className="w-7 h-7 bg-transparent rounded cursor-pointer border border-slate-400 shrink-0" />
                       <input type="text" id="botGradHex" defaultValue="#000000" className="w-full px-2 py-1 text-xs uppercase font-mono-avionics app-input" />
@@ -184,90 +327,22 @@ export function Workspace() {
                   </div>
 
                   <div>
-                    <label className="text-[10px] flex justify-between panel-label"><span>Opacity:</span> <span id="botGradOpacityVal" className="text-sky-500 font-mono-avionics font-bold">75%</span></label>
-                    <input type="range" id="botGradOpacity" min="0" max="100" defaultValue="75" className="w-full mt-1" />
+                    <label className="text-[10px] flex justify-between panel-label"><span>Opacity:</span> <span id="botGradOpacityVal" className="text-sky-500 font-mono-avionics font-bold">90%</span></label>
+                    <input type="range" id="botGradOpacity" min="0" max="100" defaultValue="90" className="w-full mt-1" />
                   </div>
 
                   <div>
-                    <label className="text-[10px] flex justify-between panel-label"><span>Depth:</span> <span id="botGradDepthVal" className="text-sky-500 font-mono-avionics font-bold">500px</span></label>
-                    <input type="range" id="botGradDepth" min="100" max="800" defaultValue="500" className="w-full mt-1" />
+                    <label className="text-[10px] flex justify-between panel-label"><span>Depth:</span> <span id="botGradDepthVal" className="text-sky-500 font-mono-avionics font-bold">450px</span></label>
+                    <input type="range" id="botGradDepth" min="100" max="800" defaultValue="450" className="w-full mt-1" />
                   </div>
 
                   <div className="pt-0.5">
-                    <button id="btnResetBotGradDepth" type="button" className="w-full py-1 tool-btn font-mono-avionics text-[10px] font-semibold text-center flex items-center justify-center gap-1 transition" title="Reset Bottom Gradient Opacity to 75% and Depth to 500px">
+                    <button id="btnResetBotGradDepth" type="button" className="w-full py-1 tool-btn font-mono-avionics text-[10px] font-semibold text-center flex items-center justify-center gap-1 transition" title="Reset Bottom Gradient Opacity to 90% and Depth to 450px">
                       <span>↺</span>
                       <span>Reset Bottom</span>
                     </button>
                   </div>
                 </div>
-              </div>
-            </div>
-
-            {/* Sizes & Offsets Section */}
-            <div id="sizesOffsetsSection" className="pt-2 border-t border-inherit space-y-1.5">
-              <span className="text-[10px] font-mono-avionics uppercase panel-label block font-semibold text-slate-300 dark:text-slate-200">Sizes &amp; Offsets:</span>
-
-              <div className="grid grid-cols-2 gap-2 text-xs">
-                <div id="hdrAirlineSizeCol">
-                  <label className="text-[10px] flex justify-between panel-label"><span id="hdrAirlineSizeLabel">Logo Height:</span> <span id="hdrAirlineSizeVal" className="text-sky-500 font-mono-avionics font-bold">145px</span></label>
-                  <input type="range" id="hdrAirlineSize" min="60" max="360" defaultValue="145" className="w-full mt-1" />
-                </div>
-                <div id="hdrSuffixSizeCol">
-                  <label className="text-[10px] flex justify-between panel-label">Focus Size: <span id="hdrSuffixSizeVal" className="text-sky-500 font-mono-avionics font-bold">148px</span></label>
-                  <input type="range" id="hdrSuffixSize" min="80" max="240" defaultValue="148" className="w-full mt-1" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2 text-xs pt-1">
-                <div id="logoOffsetYCol">
-                  <label className="text-[10px] flex justify-between panel-label">Logo Y Offset: <span id="logoOffsetYVal" className="text-sky-500 font-mono-avionics font-bold">0px</span></label>
-                  <input type="range" id="logoOffsetY" min="-80" max="80" defaultValue="0" className="w-full mt-1" />
-                </div>
-                <div id="hdrDividerGapCol">
-                  <label className="text-[10px] flex justify-between panel-label">Divider Gap: <span id="hdrDividerGapVal" className="text-sky-500 font-mono-avionics font-bold">44px</span></label>
-                  <input type="range" id="hdrDividerGap" min="16" max="120" defaultValue="44" className="w-full mt-1" />
-                </div>
-              </div>
-
-              {/* Row of 3 Tool Buttons: Drop Shadow, Force Pure White, Reset */}
-              <div className="grid grid-cols-3 gap-1 pt-1.5 text-[10px]">
-                <button id="btnToggleHdrShadow" type="button" className="py-1 px-1 rounded-md bg-sky-500/20 text-sky-400 border border-sky-500/40 text-center font-bold transition shadow-sm" title="Toggle header legibility drop shadow">
-                  Drop Shadow
-                </button>
-                <button id="btnToggleForceWhite" type="button" className="py-1 px-1 tool-btn text-center font-medium transition" title="Force logo to pure white silhouette">
-                  Pure White
-                </button>
-                <button id="btnResetHdrDimensions" type="button" className="py-1 px-1 tool-btn font-mono-avionics font-semibold text-center flex items-center justify-center gap-1 text-sky-400 hover:text-sky-300 transition" title="Reset logo height, focus size, logo Y offset, and divider gap to default">
-                  <span>↺</span>
-                  <span>Reset</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Position adjusters with Header Position title */}
-            <div id="headerPositionSection" className="pt-2 border-t border-inherit space-y-1.5">
-              <span className="text-[10px] font-mono-avionics uppercase panel-label block font-semibold text-slate-300 dark:text-slate-200">Header Position:</span>
-              <div className="grid grid-cols-2 gap-2 text-xs">
-                <div>
-                  <label className="text-[10px] flex justify-between panel-label"><span>Header X:</span> <span id="hdrPosXVal" className="text-sky-500 font-mono-avionics font-bold">180px</span></label>
-                  <input type="range" id="hdrPosX" min="0" max="3000" defaultValue="180" className="w-full mt-1" />
-                </div>
-                <div>
-                  <label className="text-[10px] flex justify-between panel-label"><span>Header Y:</span> <span id="hdrPosYVal" className="text-sky-500 font-mono-avionics font-bold">175px</span></label>
-                  <input type="range" id="hdrPosY" min="40" max="1000" defaultValue="175" className="w-full mt-1" />
-                </div>
-              </div>
-
-              {/* Reset Position Buttons: Reset X & Reset Y */}
-              <div className="grid grid-cols-2 gap-2 pt-1 text-[10px]">
-                <button id="btnResetHdrX" type="button" className="py-1 tool-btn font-mono-avionics font-semibold text-center flex items-center justify-center gap-1 transition" title="Reset Header X to 180px">
-                  <span>↺</span>
-                  <span>Reset X</span>
-                </button>
-                <button id="btnResetHdrY" type="button" className="py-1 tool-btn font-mono-avionics font-semibold text-center flex items-center justify-center gap-1 transition" title="Reset Header Y to 175px">
-                  <span>↺</span>
-                  <span>Reset Y</span>
-                </button>
               </div>
             </div>
 
@@ -408,16 +483,26 @@ export function Workspace() {
             {/* Section 1: Backdrop Header & File Uploader */}
             <div className="flex items-center justify-between">
               <span className="text-xs uppercase tracking-wider font-hud font-bold flex items-center gap-1.5">
-                <span>🖼</span> Scenery &amp; Backdrop Photo
+                <svg className="w-3.5 h-3.5 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <span>BACKDROP</span>
               </span>
-              <span id="bgStatusBadge" className="text-[10px] text-emerald-500 font-mono-avionics font-bold">Loaded</span>
+              <span id="bgStatusBadge" className="text-[10px] text-emerald-500 font-mono-avionics font-bold"></span>
             </div>
 
             {/* Drag and drop zone */}
-            <div id="dropZone" className="border-2 border-dashed border-zinc-500/30 hover:border-zinc-500 rounded-lg p-5 text-center cursor-pointer transition">
-              <svg className="w-7 h-7 mx-auto mb-2 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-              <p className="text-xs font-semibold">Click or Drag &amp; Drop Photo</p>
-              <p className="text-[10px] panel-muted mt-1">Supports JPG, PNG, WEBP (4K &amp; 8K)</p>
+            <div id="dropZone" className="border-2 border-dashed border-zinc-500/30 hover:border-zinc-500 rounded-lg p-5 text-center cursor-pointer transition group">
+              <svg className="w-7 h-7 mx-auto mb-2 opacity-80 group-hover:scale-105 group-hover:text-sky-400 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+              <p className="text-xs font-hud font-bold tracking-wide text-zinc-900 dark:text-zinc-100">
+                Click or Drag &amp; Drop Photo
+              </p>
+              <p className="text-[10px] font-mono-avionics text-zinc-500 dark:text-zinc-400 mt-1">
+                Supports JPG, PNG, WEBP (4K &amp; 8K)
+              </p>
+              <p className="text-[10px] font-mono-avionics text-zinc-400 dark:text-zinc-500 mt-1">
+                Use landscape images for best results
+              </p>
               <input type="file" id="filePicker" accept="image/*" className="hidden" />
             </div>
 
@@ -495,36 +580,29 @@ export function Workspace() {
               <p className="text-[10px] panel-muted italic text-center">💡 Tip: Click and drag directly on the preview to pan.</p>
             </div>
 
-            {/* Section 3: Photo Grading & Scrim */}
+            {/* Section 3: Photo Grading */}
             <div className="pt-2 border-t border-inherit space-y-2">
-              <span className="text-[10px] font-mono-avionics uppercase panel-label block font-semibold text-slate-300 dark:text-slate-200">Photo Grading &amp; Scrim:</span>
+              <span className="text-[10px] font-mono-avionics uppercase panel-label block font-semibold text-slate-300 dark:text-slate-200">Photo Grading:</span>
 
               <div className="space-y-2 text-xs">
                 <div>
-                  <label className="text-[10px] flex justify-between panel-label">Brightness <span id="brightVal" className="text-sky-500 font-mono-avionics font-bold">100%</span></label>
-                  <input type="range" id="bgBright" min="30" max="180" defaultValue="100" className="w-full mt-1" />
+                  <label className="text-[10px] flex justify-between panel-label">Brightness <span id="brightVal" className="text-sky-500 font-mono-avionics font-bold">0</span></label>
+                  <input type="range" id="bgBright" min="-50" max="50" defaultValue="0" className="w-full mt-1" />
                 </div>
                 <div>
-                  <label className="text-[10px] flex justify-between panel-label">Contrast <span id="contrastVal" className="text-sky-500 font-mono-avionics font-bold">105%</span></label>
-                  <input type="range" id="bgContrast" min="60" max="180" defaultValue="105" className="w-full mt-1" />
-                </div>
-                <div>
-                  <label className="text-[10px] flex justify-between panel-label">Bottom Scrim Fade <span id="botScrimVal" className="text-sky-500 font-mono-avionics font-bold">45%</span></label>
-                  <input type="range" id="botScrim" min="0" max="90" defaultValue="45" className="w-full mt-1" />
+                  <label className="text-[10px] flex justify-between panel-label">Contrast <span id="contrastVal" className="text-sky-500 font-mono-avionics font-bold">0</span></label>
+                  <input type="range" id="bgContrast" min="-50" max="50" defaultValue="0" className="w-full mt-1" />
                 </div>
 
-                {/* 4 Reset Buttons: 3 for individual values + 1 for Reset All */}
-                <div className="grid grid-cols-4 gap-1 pt-1 text-[10px]">
-                  <button id="btnResetBright" type="button" className="py-1 px-1 tool-btn font-mono-avionics font-semibold text-center flex items-center justify-center gap-0.5 transition" title="Reset Brightness to 100%">
+                {/* Reset Buttons: 2 for individual values + 1 for Reset All */}
+                <div className="grid grid-cols-3 gap-1.5 pt-1 text-[10px]">
+                  <button id="btnResetBright" type="button" className="py-1 px-1 tool-btn font-mono-avionics font-semibold text-center flex items-center justify-center gap-0.5 transition" title="Reset Brightness to 0">
                     <span>↺ Bright</span>
                   </button>
-                  <button id="btnResetContrast" type="button" className="py-1 px-1 tool-btn font-mono-avionics font-semibold text-center flex items-center justify-center gap-0.5 transition" title="Reset Contrast to 105%">
+                  <button id="btnResetContrast" type="button" className="py-1 px-1 tool-btn font-mono-avionics font-semibold text-center flex items-center justify-center gap-0.5 transition" title="Reset Contrast to 0">
                     <span>↺ Contrast</span>
                   </button>
-                  <button id="btnResetScrim" type="button" className="py-1 px-1 tool-btn font-mono-avionics font-semibold text-center flex items-center justify-center gap-0.5 transition" title="Reset Bottom Scrim Fade to 45%">
-                    <span>↺ Scrim</span>
-                  </button>
-                  <button id="btnResetGradingAll" type="button" className="py-1 px-1 tool-btn font-mono-avionics font-bold text-center text-sky-400 hover:text-sky-300 flex items-center justify-center gap-0.5 transition" title="Reset Brightness, Contrast, and Bottom Scrim Fade to defaults">
+                  <button id="btnResetGradingAll" type="button" className="py-1 px-1 tool-btn font-mono-avionics font-bold text-center text-sky-400 hover:text-sky-300 flex items-center justify-center gap-0.5 transition" title="Reset Brightness and Contrast to defaults">
                     <span>↺ All</span>
                   </button>
                 </div>
@@ -666,29 +744,11 @@ export function Workspace() {
 
             {/* Background Adaptability & Legibility Modes */}
             <div className="pt-2 border-t border-inherit space-y-2.5">
-              {/* Test Preview Backgrounds */}
-              <div className="space-y-1">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-mono-avionics uppercase panel-label font-semibold text-slate-300 dark:text-slate-200">Test Background Preview:</span>
-                  <span id="previewBgStatus" className="text-[9px] text-sky-400 font-mono-avionics hidden">Preview Active</span>
-                </div>
-                <div className="grid grid-cols-2 gap-2 text-[10px]">
-                  <button id="btnPreviewLightBg" type="button" className="py-1 px-2 tool-btn flex items-center justify-center gap-1 font-medium transition" title="Toggle bright daylight snow/cloud backdrop preview">
-                    <span>☀️</span>
-                    <span>Light Scenery</span>
-                  </button>
-                  <button id="btnPreviewDarkBg" type="button" className="py-1 px-2 tool-btn flex items-center justify-center gap-1 font-medium transition" title="Toggle deep night/tarmac backdrop preview">
-                    <span>🌙</span>
-                    <span>Dark Scenery</span>
-                  </button>
-                </div>
-              </div>
-
               {/* Contrast Mode On/Off Toggle Buttons */}
               <div className="space-y-1">
                 <span className="text-[10px] font-mono-avionics uppercase panel-label block font-semibold text-slate-300 dark:text-slate-200">Text Legibility &amp; Contrast:</span>
                 <div id="legibilityStyleRow" className="grid grid-cols-5 gap-1 text-[10px]">
-                  <button id="btnLegibilityDark" type="button" className="py-1 px-0.5 rounded-md bg-sky-500/20 text-sky-400 border border-sky-500/40 text-center font-bold transition shadow-sm" title="Toggle Dark BG shadow mode">
+                  <button id="btnLegibilityDark" type="button" className="py-1 px-0.5 rounded-md bg-white/20 text-white border border-white/40 text-center font-bold transition shadow-sm" title="Toggle Dark BG shadow mode">
                     Dark BG
                   </button>
                   <button id="btnLegibilityLightBG" type="button" className="py-1 px-0.5 tool-btn text-center font-medium transition" title="Toggle Light BG contrast mode">
@@ -717,7 +777,7 @@ export function Workspace() {
 
               {/* Action Buttons: Enable Effect & Reset */}
               <div className="grid grid-cols-2 gap-2 pt-1 text-[10px]">
-                <button id="btnToggleLegibilityEffect" type="button" className="py-1 px-2 rounded-md bg-sky-500/20 text-sky-400 border border-sky-500/40 text-center font-bold transition shadow-sm" title="Toggle Legibility Shadow & Glow on or off">
+                <button id="btnToggleLegibilityEffect" type="button" className="py-1 px-2 rounded-md bg-white/20 text-white border border-white/40 text-center font-bold transition shadow-sm" title="Toggle Legibility Shadow & Glow on or off">
                   <span id="legibilityToggleLabel">Effect Enabled</span>
                 </button>
                 <button id="btnResetLegibility" type="button" className="py-1 px-2 tool-btn font-mono-avionics font-semibold text-center flex items-center justify-center gap-1 transition" title="Reset legibility to Dark Back and 100% Intensity">
@@ -738,9 +798,10 @@ export function Workspace() {
       <main className="flex-1 flex flex-col overflow-hidden relative">
 
         {/* VIEWPORT TOOLBAR */}
-        <div id="viewportToolbar" className="h-10 border-b px-5 flex items-center justify-between text-xs panel-muted shrink-0 transition-colors duration-150">
-          <div className="flex items-center gap-3">
-            <span className="font-hud font-bold text-zinc-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
+        <div id="viewportToolbar" className="h-10 border-b px-5 flex items-center justify-between text-xs panel-muted shrink-0 transition-colors duration-150 gap-4">
+          {/* Top Bar Navigation / Workspace Flow Breadcrumb */}
+          <div className="flex items-center gap-2 overflow-hidden text-[11px] font-mono-avionics select-none min-w-0">
+            <span className="font-hud font-bold text-zinc-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5 shrink-0">
               {/* Workspace / Frame Icon */}
               <svg className="w-3.5 h-3.5 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <rect x="3" y="3" width="18" height="18" rx="2" strokeWidth="2" />
@@ -749,36 +810,64 @@ export function Workspace() {
               </svg>
               <span>WORKSPACE</span>
             </span>
-            <span className="text-zinc-400 hidden sm:inline">|</span>
-            <span className="text-[11px] font-mono-avionics hidden sm:inline">Click &amp; drag canvas to pan background</span>
+
+            {/* 1. Dynamic Activity Type Crumb Item */}
+            <span id="crumbSepActivity" className="text-zinc-400 dark:text-zinc-600 font-semibold shrink-0 hidden">/</span>
+            <span id="crumbActivity" className="truncate font-semibold text-zinc-700 dark:text-zinc-200 shrink-0 max-w-[180px] hidden" title="Activity Type"></span>
+
+            {/* 2. Dynamic Airline Crumb Item */}
+            <span id="crumbSepAirline" className="text-zinc-400 dark:text-zinc-600 font-semibold shrink-0 hidden">/</span>
+            <span id="crumbAirline" className="truncate font-semibold text-zinc-700 dark:text-zinc-200 shrink-0 max-w-[340px] hidden" title="Selected Airline"></span>
+
+            {/* 3. Dynamic Airport Crumb Item (ICAO - City) */}
+            <span id="crumbSepAirport" className="text-zinc-400 dark:text-zinc-600 font-semibold shrink-0 hidden">/</span>
+            <span id="crumbAirport" className="truncate font-semibold text-zinc-700 dark:text-zinc-200 shrink-0 max-w-[280px] hidden" title="Airport ICAO - City"></span>
           </div>
 
-          {/* Canvas Specs (Right-aligned flush with header actions / Download Banner button) */}
-          <div className="flex items-center gap-2.5 text-[11px] font-mono-avionics">
-            <div className="flex items-center font-medium text-zinc-800 dark:text-white">
-              <span>5664 × 2500 px</span>
-            </div>
-            <span className="text-zinc-400">|</span>
-            <div className="flex items-center gap-1 text-zinc-500 dark:text-zinc-400">
-              <span>Target:</span>
-              <span className="font-semibold text-zinc-800 dark:text-zinc-200">&lt; 2.0 MB JPG</span>
-            </div>
+          {/* Top Right Version Text in [] */}
+          <div className="flex items-center gap-1.5 shrink-0 select-none text-[10px] font-mono-avionics font-semibold tracking-wider text-zinc-500 dark:text-zinc-400">
+            <span id="appVersionTag" title="Airwaylink Banner Studio Build Version">
+              [ {APP_VERSION} ]
+            </span>
           </div>
         </div>
 
         {/* INTERACTIVE PREVIEW WRAPPER */}
-        <div id="viewportContainer" className="flex-1 overflow-auto p-4 flex flex-col items-center justify-center relative hud-grid-pattern select-none cursor-grab active:cursor-grabbing">
+        <div id="viewportContainer" className="flex-1 overflow-auto p-4 flex flex-col items-center justify-center relative hud-grid-pattern select-none cursor-default">
 
           {/* Scaled Banner Container (5664:2500 Aspect Ratio) */}
-          <div id="bannerContainer" className="relative shadow-xl border border-zinc-500/20 rounded-md overflow-hidden transition-transform duration-75">
+          <div id="bannerContainer" className="relative shadow-xl border border-zinc-500/20 rounded-md overflow-hidden transition-all duration-150">
             {/* Canvas preview scaled from internal 5664x2500 buffer */}
             <canvas id="previewCanvas" className="block w-full h-full bg-slate-950"></canvas>
 
-
+            {/* Drag & Drop Canvas Overlay for Backdrop Photo */}
+            <div
+              id="canvasDropOverlay"
+              className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-slate-950/80 backdrop-blur-[3px] border-2 border-dashed border-sky-400 pointer-events-none opacity-0 transition-opacity duration-150"
+            >
+              <div className="flex flex-col items-center justify-center p-6 text-center select-none">
+                <div className="w-14 h-14 rounded-full bg-sky-500/20 border border-sky-400/60 flex items-center justify-center mb-3 text-sky-400 shadow-[0_0_24px_rgba(56,189,248,0.4)]">
+                  <svg className="w-7 h-7 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <span className="font-hud font-bold text-sm tracking-widest text-sky-300 uppercase">
+                  DROP IMAGE TO SET BACKDROP PHOTO
+                </span>
+                <span className="font-mono-avionics text-[10px] text-sky-200/75 mt-1 tracking-wide">
+                  SUPPORTS JPG, PNG, WEBP, AVIF (4K &amp; 8K RESOLUTIONS)
+                </span>
+              </div>
+            </div>
           </div>
 
-          {/* Funny Aviation Taglines Footer */}
-          <div className="mt-3 flex items-center justify-center gap-2 text-center text-xs font-mono-avionics text-zinc-400 select-none cursor-pointer group" id="taglineContainer" title="Click for another tagline!">
+          {/* Canvas Specs: Bottom Center in [] */}
+          <div id="canvasSpecsBadge" className="mt-2.5 flex items-center justify-center text-[11px] font-mono-avionics text-zinc-500 dark:text-zinc-400 select-none tracking-wide shrink-0">
+            <span>[ 5664 × 2500 px | Target: &lt; 2.0 MB JPG ]</span>
+          </div>
+
+          {/* Funny Aviation Taglines Footer (Disabled for now) */}
+          <div className="hidden mt-3 items-center justify-center gap-2 text-center text-xs font-mono-avionics text-zinc-400 select-none cursor-pointer group" id="taglineContainer" title="Click for another tagline!">
             <span className="text-amber-500 opacity-70 group-hover:scale-110 transition-transform">✈</span>
             <span id="taglineText" className="group-hover:text-zinc-200 transition-colors">"Aviate, Navigate, Communicate, then fiddle with the banner."</span>
             <span className="text-[10px] text-zinc-600 dark:text-zinc-500 group-hover:text-sky-400 transition-colors">↺</span>

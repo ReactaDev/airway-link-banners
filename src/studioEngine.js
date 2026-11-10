@@ -1,12 +1,4 @@
 import AIRPORT_DATABASE from './assets/airports.json';
-import ANZ from './assets/ANZ.png';
-import CPA from './assets/CPA.png';
-import FDX from './assets/FDX.png';
-import FFT from './assets/FFT.png';
-import ICE from './assets/ICE.png';
-import JBU from './assets/JBU.png';
-import QFA from './assets/QFA.png';
-import UAL from './assets/UAL.png';
 
 export function mountStudio(root) {
   const listeners = new AbortController();
@@ -37,83 +29,56 @@ export function mountStudio(root) {
     "Roboto": "'Roboto', sans-serif"
   };
 
-  // Embedded Official Cropped Virtual Airline Logos (Lossless PNG Data URLs)
-  const embeddedLogoDataUrls = { ANZ, CPA, FDX, FFT, ICE, JBU, QFA, UAL };
-
   // Preloaded Image objects for each airline
   const loadedAirlineLogos = {};
 
-  // Profiles for all virtual airlines with authentic brand colors, default logo heights, and fallback fonts
+  // Standard uniform size and spacing for airline logo lockup (matches font height)
+  const UNIFORM_LOGO_SIZE = 140;
+  const UNIFORM_SUFFIX_SIZE = 140;
+  const BASE_DIVIDER_GAP = 20;
+  const DEFAULT_HEADER_X = 150;
+
+  // Known fallback brand colors, default logo heights, and fonts for recognized airlines
+  const KNOWN_AIRLINE_DEFAULTS = {
+    ANZ: { brandColor: "#002030", defaultLogoHeight: UNIFORM_LOGO_SIZE, defaultLogoOffsetY: 0, defaultSuffixSize: UNIFORM_SUFFIX_SIZE, fontCss: "italic 800 {size}px 'Barlow', sans-serif", letterSpacing: "2px" },
+    CPA: { brandColor: "#006564", defaultLogoHeight: 200, defaultLogoOffsetY: -20, defaultSuffixSize: UNIFORM_SUFFIX_SIZE, fontCss: "700 {size}px 'Cinzel', serif", letterSpacing: "3px" },
+    FDX: { brandColor: "#4d148c", defaultLogoHeight: UNIFORM_LOGO_SIZE, defaultLogoOffsetY: -20, defaultSuffixSize: UNIFORM_SUFFIX_SIZE, fontCss: "italic 900 {size}px 'Inter', sans-serif", letterSpacing: "-2px" },
+    FFT: { brandColor: "#006644", defaultLogoHeight: UNIFORM_LOGO_SIZE, defaultLogoOffsetY: 0, defaultSuffixSize: UNIFORM_SUFFIX_SIZE, fontCss: "italic 900 {size}px 'Montserrat', sans-serif", letterSpacing: "1px" },
+    ICE: { brandColor: "#001952", defaultLogoHeight: 200, defaultLogoOffsetY: -20, defaultSuffixSize: UNIFORM_SUFFIX_SIZE, fontCss: "800 {size}px 'Outfit', sans-serif", letterSpacing: "3px" },
+    JBU: { brandColor: "#00205b", defaultLogoHeight: 200, defaultLogoOffsetY: -10, defaultSuffixOffsetX: -200, defaultSuffixSize: UNIFORM_SUFFIX_SIZE, defaultHeaderX: -50, fontCss: "700 {size}px 'Prompt', sans-serif", letterSpacing: "1px" },
+    QFA: { brandColor: "#e40000", defaultLogoHeight: UNIFORM_LOGO_SIZE, defaultLogoOffsetY: 0, defaultSuffixSize: UNIFORM_SUFFIX_SIZE, fontCss: "italic 800 {size}px 'Montserrat', sans-serif", letterSpacing: "3px" },
+    UAL: { brandColor: "#002244", defaultLogoHeight: UNIFORM_LOGO_SIZE, defaultLogoOffsetY: 0, defaultSuffixSize: UNIFORM_SUFFIX_SIZE, fontCss: "900 {size}px 'Montserrat', sans-serif", letterSpacing: "1px" }
+  };
+
+  const fallbackAirlineProfile = {
+    name: "Airwaylink",
+    suffix: "Focus Airport",
+    brandColor: "#002b49",
+    defaultLogoHeight: UNIFORM_LOGO_SIZE,
+    defaultLogoOffsetX: 0,
+    defaultLogoOffsetY: 0,
+    defaultSuffixOffsetX: 0,
+    defaultSuffixOffsetY: 0,
+    defaultSuffixSize: UNIFORM_SUFFIX_SIZE,
+    defaultHeaderX: DEFAULT_HEADER_X,
+    fontCss: "italic 800 {size}px 'Barlow', sans-serif",
+    letterSpacing: "2px"
+  };
+
+  // Profiles for all virtual airlines (populated dynamically from the API)
   const airlineProfiles = {
-    ANZ: {
-      name: "ANZ Virtual",
-      suffix: "Focus Airport",
-      brandColor: "#002030", // Deep New Zealand Pacific Teal
-      defaultLogoHeight: 145,
-      fontCss: "italic 800 {size}px 'Barlow', sans-serif",
-      letterSpacing: "2px"
-    },
-    CPA: {
-      name: "Cathay Pacific Virtual",
-      suffix: "Focus Airport",
-      brandColor: "#006564", // Cathay Brushwing Jade Green
-      defaultLogoHeight: 175,
-      fontCss: "700 {size}px 'Cinzel', serif",
-      letterSpacing: "3px"
-    },
-    FDX: {
-      name: "vFedEx",
-      suffix: "Focus Airport",
-      brandColor: "#4d148c", // FedEx Deep Purple
-      defaultLogoHeight: 135,
-      fontCss: "italic 900 {size}px 'Inter', sans-serif",
-      letterSpacing: "-2px"
-    },
-    FFT: {
-      name: "Frontier Virtual",
-      suffix: "Focus Airport",
-      brandColor: "#006644", // Frontier Spruce Green
-      defaultLogoHeight: 165,
-      fontCss: "italic 900 {size}px 'Montserrat', sans-serif",
-      letterSpacing: "1px"
-    },
-    ICE: {
-      name: "Icelandair Virtual",
-      suffix: "Focus Airport",
-      brandColor: "#001952", // Icelandair Deep Nordic Blue
-      defaultLogoHeight: 175,
-      fontCss: "800 {size}px 'Outfit', sans-serif",
-      letterSpacing: "3px"
-    },
-    JBU: {
-      name: "JetBlue Virtual",
-      suffix: "Focus Airport",
-      brandColor: "#00205b", // JetBlue True Blue
-      defaultLogoHeight: 170,
-      fontCss: "700 {size}px 'Prompt', sans-serif",
-      letterSpacing: "1px"
-    },
-    QFA: {
-      name: "Qantas Virtual",
-      suffix: "Focus Airport",
-      brandColor: "#e40000", // Qantas Flying Kangaroo Red
-      defaultLogoHeight: 165,
-      fontCss: "italic 800 {size}px 'Montserrat', sans-serif",
-      letterSpacing: "3px"
-    },
-    UAL: {
-      name: "vUAL",
-      suffix: "Focus Airport",
-      brandColor: "#002244", // United Deep Navy
-      defaultLogoHeight: 165,
-      fontCss: "900 {size}px 'Montserrat', sans-serif",
-      letterSpacing: "1px"
-    },
+    // AUDIT NOTE: "CUSTOM" profile is intentionally kept in the dictionary but temporarily disabled and removed from the dropdown list. Do not prune or delete during audits.
     CUSTOM: {
       name: "Custom Airline",
       suffix: "Focus Airport",
       brandColor: "#003b6f",
-      defaultLogoHeight: 160,
+      defaultLogoHeight: UNIFORM_LOGO_SIZE,
+      defaultLogoOffsetX: 0,
+      defaultLogoOffsetY: 0,
+      defaultSuffixOffsetX: 0,
+      defaultSuffixOffsetY: 0,
+      defaultSuffixSize: UNIFORM_SUFFIX_SIZE,
+      defaultHeaderX: DEFAULT_HEADER_X,
       fontCss: "800 {size}px 'Montserrat', sans-serif",
       letterSpacing: "2px"
     }
@@ -123,7 +88,8 @@ export function mountStudio(root) {
   const state = {
     // Selected Airline & Unified Header (Starts unselected)
     selectedAirlineKey: '',
-    headerMode: 'logo', // 'logo' | 'text'
+    headerMode: 'logo', // 'logo'
+    logoVariant: 'dark', // 'dark' | 'light'
     airlineName: "",
     suffixName: "Focus Airport",
     topBrandColor: "#002030",
@@ -131,21 +97,26 @@ export function mountStudio(root) {
     customLogoOverrides: {}, // per-airline user-uploaded logo Image overrides
 
     // Header Logo / Typography & Placement
-    hdrAirlineSize: 145, // Controls Logo Height in 'logo' mode, or font size in 'text' mode
-    hdrSuffixSize: 148,
+    hdrAirlineSize: UNIFORM_LOGO_SIZE, // Controls Logo Height in 'logo' mode, or font size in 'text' mode
+    hdrSuffixSize: UNIFORM_SUFFIX_SIZE,
+    logoOffsetX: 0,
     logoOffsetY: 0,
-    hdrDividerGap: 44,
+    suffixOffsetX: 0,
+    suffixOffsetY: 0,
     hdrShadow: true,
     logoForceWhite: false,
-    hdrPosX: 180,
+    hdrPosX: DEFAULT_HEADER_X,
     hdrPosY: 175,
+    lockHeaderPos: true,
+    lockSizesOffsets: true,
 
     // Gradients (Colors, Individual Opacity & Depths)
     botBrandColor: "#000000",
-    topGradOpacity: 75, // 0 - 100% (default: 75%)
-    botGradOpacity: 75, // 0 - 100% (default: 75%)
-    topGradDepth: 500,
-    botGradDepth: 500,
+    topGradOpacity: 90, // 0 - 100% (default: 90%)
+    botGradOpacity: 90, // 0 - 100% (default: 90%)
+    topGradDepth: 450,
+    botGradDepth: 450,
+    lockGradients: true,
 
     // Custom Profile Feature Toggles
     showHeaderBrand: true,
@@ -189,18 +160,15 @@ export function mountStudio(root) {
 
     // Background Image & Adjustments
     bgImage: null,
-    cachedUserImage: null, // Preserves user uploaded / URL photo when previewing synthetic light/dark scenery
-    activePreviewBg: null, // null | 'light' | 'dark' 
     bgZoom: 1.0,
     bgPanX: 0,
     bgPanY: 0,
     lockPanX: false,
     lockPanY: false,
     isForceScaled: false,
-    bgBright: 100,
-    bgContrast: 105,
+    bgBright: 0,
+    bgContrast: 0,
     bgSat: 100,
-    botScrim: 45,
 
     // Airport Text Details: defaults to empty in inputs, fallbacks to "ICAO" and "CITY" on canvas
     airport: {
@@ -256,15 +224,6 @@ export function mountStudio(root) {
     } catch (err) {
       console.warn("Failed to parse custom airlines:", err);
       return [];
-    }
-  }
-
-  // Persistence helper: Save list of user-created custom airline profiles
-  function saveCustomAirlineRecords(records) {
-    try {
-      localStorage.setItem(CUSTOM_AIRLINES_KEY, JSON.stringify(records));
-    } catch (err) {
-      console.error("Failed to save custom airlines:", err);
     }
   }
 
@@ -333,7 +292,7 @@ export function mountStudio(root) {
     // Check localStorage for any codes not in IndexedDB
     const storedCustomList = loadCustomAirlineRecords();
     const customCodes = storedCustomList.map(item => item.code);
-    const allCodes = ["ANZ", "CPA", "FDX", "FFT", "ICE", "JBU", "QFA", "UAL", "CUSTOM", ...customCodes];
+    const allCodes = Array.from(new Set([...Object.keys(airlineProfiles), "CUSTOM", ...customCodes]));
     for (const code of allCodes) {
       if (!result[code]) {
         const lsData = localStorage.getItem(`airwaylink_logo_${code}`);
@@ -343,95 +302,262 @@ export function mountStudio(root) {
     return result;
   }
 
-  async function removeLogoFromStorage(airlineCode) {
-    try {
-      const db = await openDatabase();
-      if (db) {
-        await new Promise((resolve) => {
-          const tx = db.transaction([LOGO_STORE], "readwrite");
-          const store = tx.objectStore(LOGO_STORE);
-          store.delete(airlineCode);
-          tx.oncomplete = () => resolve();
-          tx.onerror = () => resolve();
-        });
+  // Register API airline items into airlineProfiles and trigger background logo preloading
+  function registerApiAirlines(list) {
+    if (!Array.isArray(list)) return;
+
+    list.forEach(item => {
+      const code = (item.icao || item.short_name || String(item.id || '')).trim().toUpperCase();
+      if (!code) return;
+
+      const name = item.long_name || item.short_name || code;
+      const known = KNOWN_AIRLINE_DEFAULTS[code] || {};
+      const brandColor = item.primary_color || known.brandColor || "#002b49";
+      const defaultLogoHeight = known.defaultLogoHeight || UNIFORM_LOGO_SIZE;
+      const defaultLogoOffsetX = known.defaultLogoOffsetX !== undefined ? known.defaultLogoOffsetX : 0;
+      const defaultLogoOffsetY = known.defaultLogoOffsetY !== undefined ? known.defaultLogoOffsetY : 0;
+      const defaultSuffixOffsetX = known.defaultSuffixOffsetX !== undefined ? known.defaultSuffixOffsetX : 0;
+      const defaultSuffixOffsetY = known.defaultSuffixOffsetY !== undefined ? known.defaultSuffixOffsetY : 0;
+      const defaultHeaderX = known.defaultHeaderX !== undefined ? known.defaultHeaderX : DEFAULT_HEADER_X;
+      const fontCss = known.fontCss || "italic 800 {size}px 'Barlow', sans-serif";
+      const letterSpacing = known.letterSpacing || "2px";
+      const logoLightUrl = item.logo_light_url || item.logo_url || null;
+      const logoDarkUrl = item.logo_url || item.logo_light_url || null;
+
+      airlineProfiles[code] = {
+        name,
+        code,
+        suffix: "Focus Airport",
+        brandColor,
+        defaultLogoHeight,
+        defaultLogoOffsetX,
+        defaultLogoOffsetY,
+        defaultSuffixOffsetX,
+        defaultSuffixOffsetY,
+        defaultHeaderX,
+        defaultSuffixSize: known.defaultSuffixSize || UNIFORM_SUFFIX_SIZE,
+        fontCss,
+        letterSpacing,
+        logoUrl: logoLightUrl || logoDarkUrl,
+        logoLightUrl,
+        logoDarkUrl,
+        enabled: item.enabled !== false,
+        id: item.id,
+        apiRecord: item
+      };
+
+      // Preload active airlines logos
+      if (item.enabled !== false) {
+        // Preload Light logo image
+        if (logoLightUrl && !loadedAirlineLogos[`${code}_light`]) {
+          const imgLight = new Image();
+          imgLight.crossOrigin = "anonymous";
+          loadedAirlineLogos[`${code}_light`] = imgLight;
+          loadedAirlineLogos[code] = imgLight;
+          imgLight.onload = () => {
+            const trimmed = trimTransparentImage(imgLight);
+            const finalImg = (trimmed && (trimmed.naturalWidth || trimmed._trimmedCanvas)) ? trimmed : imgLight;
+            loadedAirlineLogos[`${code}_light`] = finalImg;
+            loadedAirlineLogos[code] = finalImg;
+            cacheLogoImage(`${code}_light`, finalImg);
+            if (state.selectedAirlineKey === code) {
+              updateSidebarLogoPreview();
+              renderAll();
+            }
+          };
+          imgLight.src = logoLightUrl;
+        }
+
+        // Preload Dark logo image
+        if (logoDarkUrl && !loadedAirlineLogos[`${code}_dark`]) {
+          const imgDark = new Image();
+          imgDark.crossOrigin = "anonymous";
+          loadedAirlineLogos[`${code}_dark`] = imgDark;
+          imgDark.onload = () => {
+            const trimmed = trimTransparentImage(imgDark);
+            const finalImg = (trimmed && (trimmed.naturalWidth || trimmed._trimmedCanvas)) ? trimmed : imgDark;
+            loadedAirlineLogos[`${code}_dark`] = finalImg;
+            cacheLogoImage(`${code}_dark`, finalImg);
+            if (state.selectedAirlineKey === code) {
+              updateSidebarLogoPreview();
+              renderAll();
+            }
+          };
+          imgDark.src = logoDarkUrl;
+        }
       }
-    } catch (err) {}
-    try {
-      localStorage.removeItem(`airwaylink_logo_${airlineCode}`);
-    } catch (err) {}
+    });
   }
 
-  // Preload all embedded airline logos
-  async function preloadEmbeddedLogos() {
-    const defaultPromises = Object.entries(embeddedLogoDataUrls).map(([code, dataUrl]) => {
-      return new Promise((resolve) => {
+  // Cache a loaded HTMLImageElement data URL into persistent storage
+  function cacheLogoImage(key, img) {
+    if (!key || !img) return;
+    try {
+      const c = document.createElement('canvas');
+      c.width = img.naturalWidth || img.width;
+      c.height = img.naturalHeight || img.height;
+      if (c.width > 0 && c.height > 0) {
+        const ctx = c.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        const dataUrl = c.toDataURL('image/png');
+        saveLogoToStorage(key, dataUrl);
+      }
+    } catch (e) {}
+  }
+
+  // Preload logos for a specific airline on demand with high priority
+  function preloadAirline(code) {
+    if (!code) return;
+    const profile = airlineProfiles[code];
+    if (!profile) return;
+
+    ['dark', 'light'].forEach(variant => {
+      const variantKey = `${code}_${variant}`;
+      const existing = loadedAirlineLogos[variantKey];
+      if (existing && (existing.complete || (existing.naturalWidth && existing.naturalWidth > 0))) {
+        return;
+      }
+
+      const targetUrl = variant === 'dark'
+        ? (profile.logoDarkUrl || profile.logoLightUrl || profile.logoUrl)
+        : (profile.logoLightUrl || profile.logoDarkUrl || profile.logoUrl);
+
+      if (!targetUrl) return;
+
+      if (!loadedAirlineLogos[variantKey]) {
         const img = new Image();
         img.crossOrigin = "anonymous";
+        loadedAirlineLogos[variantKey] = img;
         img.onload = () => {
-          loadedAirlineLogos[code] = img;
-          resolve();
+          const trimmed = trimTransparentImage(img);
+          const finalImg = (trimmed && (trimmed.naturalWidth || trimmed._trimmedCanvas)) ? trimmed : img;
+          loadedAirlineLogos[variantKey] = finalImg;
+          cacheLogoImage(variantKey, finalImg);
+          if (state.selectedAirlineKey === code) {
+            updateSidebarLogoPreview();
+            renderAll();
+          }
         };
-        img.onerror = () => resolve();
-        img.src = dataUrl;
-      });
+        img.src = targetUrl;
+      }
     });
-    await Promise.all(defaultPromises);
-
-    // Now restore any user-uploaded logos saved in persistent storage
-    const storedLogos = await loadAllStoredLogos();
-    const overridePromises = Object.entries(storedLogos).map(([code, dataUrl]) => {
-      return new Promise((resolve) => {
-        const img = new Image();
-        img.onload = () => {
-          state.customLogoOverrides[code] = img;
-          resolve();
-        };
-        img.onerror = () => resolve();
-        img.src = dataUrl;
-      });
-    });
-    await Promise.all(overridePromises);
   }
 
-  // Helper: Auto-trim transparent borders from an uploaded logo image
-  function trimTransparentImage(img) {
-    const tempCanvas = document.createElement('canvas');
-    tempCanvas.width = img.naturalWidth || img.width;
-    tempCanvas.height = img.naturalHeight || img.height;
-    const ctx = tempCanvas.getContext('2d');
-    ctx.drawImage(img, 0, 0);
+  // Load airlines dynamically from API (with local caching and logo prefetching)
+  async function loadAirlinesFromAPI() {
+    const AIRLINES_API_URL = import.meta.env.VITE_AIRLINES_API_URL || 'https://app.airwaylink.org/api/airlines';
+    let apiData = null;
 
-    const { width, height } = tempCanvas;
-    const imgData = ctx.getImageData(0, 0, width, height).data;
-    let top = height, left = width, right = 0, bottom = 0;
-    let foundPixel = false;
-
-    for (let y = 0; y < height; y++) {
-      for (let x = 0; x < width; x++) {
-        const alpha = imgData[(y * width + x) * 4 + 3];
-        if (alpha > 8) {
-          foundPixel = true;
-          if (x < left) left = x;
-          if (x > right) right = x;
-          if (y < top) top = y;
-          if (y > bottom) bottom = y;
+    // Check cached data first to populate immediately if available
+    try {
+      const cached = localStorage.getItem('airwaylink_api_airlines');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          registerApiAirlines(parsed);
+          syncCustomAirlinesToUI();
         }
+      }
+    } catch (e) {}
+
+    // Fetch fresh airlines data from API
+    try {
+      const res = await fetch(AIRLINES_API_URL);
+      if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+      apiData = await res.json();
+      if (Array.isArray(apiData) && apiData.length > 0) {
+        try {
+          localStorage.setItem('airwaylink_api_airlines', JSON.stringify(apiData));
+        } catch (e) {}
+        registerApiAirlines(apiData);
+      }
+    } catch (err) {
+      console.warn("Could not fetch airlines from API:", err);
+      const loadingOpt = getElement('optAirlineLoading');
+      if (loadingOpt && Object.keys(airlineProfiles).filter(k => k !== 'CUSTOM').length === 0) {
+        loadingOpt.textContent = "Unable to load airlines (Click to retry)";
+        loadingOpt.disabled = false;
+        loadingOpt.value = "RETRY";
       }
     }
 
-    if (!foundPixel) return img;
+    // Restore persistent logos (both custom uploaded overrides and cached API logos)
+    try {
+      const storedLogos = await loadAllStoredLogos();
+      const overridePromises = Object.entries(storedLogos).map(([code, dataUrl]) => {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.crossOrigin = "anonymous";
+          img.onload = () => {
+            if (code.includes('_light') || code.includes('_dark')) {
+              loadedAirlineLogos[code] = img;
+            } else {
+              state.customLogoOverrides[code] = img;
+            }
+            resolve();
+          };
+          img.onerror = () => resolve();
+          img.src = dataUrl;
+        });
+      });
+      await Promise.all(overridePromises);
+    } catch (e) {}
 
-    const trimW = right - left + 1;
-    const trimH = bottom - top + 1;
-    const trimmedCanvas = document.createElement('canvas');
-    trimmedCanvas.width = trimW;
-    trimmedCanvas.height = trimH;
-    trimmedCanvas.getContext('2d').drawImage(tempCanvas, left, top, trimW, trimH, 0, 0, trimW, trimH);
+    syncCustomAirlinesToUI();
+  }
 
-    const trimmedImg = new Image();
-    trimmedImg.crossOrigin = "anonymous";
-    trimmedImg.src = trimmedCanvas.toDataURL('image/png');
-    return trimmedImg;
+  // Helper: Auto-trim transparent borders from an image so dimensions reflect actual artwork
+  function trimTransparentImage(img) {
+    if (!img) return img;
+    const width = img.naturalWidth || img.width;
+    const height = img.naturalHeight || img.height;
+    if (!width || !height) return img;
+
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = width;
+    tempCanvas.height = height;
+    const ctx = tempCanvas.getContext('2d');
+    try {
+      ctx.drawImage(img, 0, 0);
+      const imgData = ctx.getImageData(0, 0, width, height).data;
+      let top = height, left = width, right = 0, bottom = 0;
+      let foundPixel = false;
+
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          const alpha = imgData[(y * width + x) * 4 + 3];
+          if (alpha > 8) {
+            foundPixel = true;
+            if (x < left) left = x;
+            if (x > right) right = x;
+            if (y < top) top = y;
+            if (y > bottom) bottom = y;
+          }
+        }
+      }
+
+      if (!foundPixel) return img;
+
+      // If padding is negligible (<= 3px on all sides), keep original
+      if (left <= 3 && top <= 3 && (width - 1 - right) <= 3 && (height - 1 - bottom) <= 3) {
+        return img;
+      }
+
+      const trimW = right - left + 1;
+      const trimH = bottom - top + 1;
+      const trimmedCanvas = document.createElement('canvas');
+      trimmedCanvas.width = trimW;
+      trimmedCanvas.height = trimH;
+      trimmedCanvas.getContext('2d').drawImage(tempCanvas, left, top, trimW, trimH, 0, 0, trimW, trimH);
+
+      const trimmedImg = new Image();
+      trimmedImg.crossOrigin = "anonymous";
+      trimmedImg.src = trimmedCanvas.toDataURL('image/png');
+      trimmedImg._trimmedCanvas = trimmedCanvas;
+      return trimmedImg;
+    } catch (e) {
+      return img;
+    }
   }
 
   // Helper: Create pure-white silhouette canvas from logo image
@@ -456,16 +582,53 @@ export function mountStudio(root) {
   const tabContentText = getElement('tabContentText');
 
   let activeTabId = 'airline';
+
+  function updateViewportCursor() {
+    if (!viewportContainer) return;
+    const canPan = Boolean(state.selectedAirlineKey) && activeTabId === 'scenery';
+    if (canPan) {
+      viewportContainer.classList.remove('cursor-default');
+      viewportContainer.classList.add('cursor-grab', 'active:cursor-grabbing');
+    } else {
+      viewportContainer.classList.remove('cursor-grab', 'active:cursor-grabbing');
+      viewportContainer.classList.add('cursor-default');
+    }
+  }
+
+  function updateTabAvailabilityUI() {
+    const hasAirline = Boolean(state.selectedAirlineKey);
+
+    [tabBtnScenery, tabBtnText].forEach(btn => {
+      if (!btn) return;
+      btn.disabled = !hasAirline;
+      if (!hasAirline) {
+        btn.classList.add('opacity-40', 'cursor-not-allowed', 'pointer-events-none');
+        btn.title = "Select an airline profile first to unlock";
+      } else {
+        btn.classList.remove('opacity-40', 'cursor-not-allowed', 'pointer-events-none');
+        btn.removeAttribute('title');
+      }
+    });
+
+    if (!hasAirline && activeTabId !== 'airline') {
+      setActiveTab('airline');
+    }
+    updateViewportCursor();
+  }
+
   function setActiveTab(tab) {
+    if (tab !== 'airline' && !state.selectedAirlineKey) {
+      return;
+    }
     activeTabId = tab;
     const isDark = document.body.classList.contains('theme-dark');
     const inactiveClass = isDark 
-      ? "flex-1 py-1 rounded-md text-zinc-400 hover:text-white hover:bg-white/[0.06] transition font-medium text-xs font-hud"
-      : "flex-1 py-1 rounded-md text-zinc-600 hover:text-black hover:bg-black/[0.04] transition font-medium text-xs font-hud";
+      ? "flex-1 py-1 rounded-md text-zinc-400 hover:text-white hover:bg-white/[0.08] transition font-medium text-xs font-hud"
+      : "flex-1 py-1 rounded-md text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100/60 transition font-medium text-xs font-hud";
 
     const activeClass = isDark
-      ? "flex-1 py-1 rounded-md text-white bg-[#383838] border border-white/10 font-bold transition text-xs font-hud shadow-sm"
-      : "flex-1 py-1 rounded-md text-black bg-white border border-black/10 font-bold transition text-xs font-hud shadow-sm";
+      ? "flex-1 py-1 rounded-md text-white bg-[#242429] border border-white/10 font-bold transition text-xs font-hud shadow-sm"
+      : "flex-1 py-1 rounded-md text-zinc-900 bg-zinc-100 border border-zinc-200 font-bold transition text-xs font-hud shadow-sm";
 
     [tabBtnAirline, tabBtnScenery, tabBtnText].forEach(b => {
       b.className = inactiveClass;
@@ -482,6 +645,21 @@ export function mountStudio(root) {
       tabBtnText.className = activeClass;
       tabContentText.classList.remove('hidden');
     }
+
+    if (tab !== 'scenery') {
+      const overlay = getElement('canvasDropOverlay');
+      if (overlay) {
+        overlay.classList.remove('opacity-100');
+        overlay.classList.add('opacity-0');
+      }
+      const banner = getElement('bannerContainer');
+      if (banner) {
+        banner.classList.remove('ring-2', 'ring-sky-400', 'shadow-[0_0_30px_rgba(56,189,248,0.35)]');
+      }
+    }
+
+    updateTabAvailabilityUI();
+    updateViewportCursor();
   }
 
   tabBtnAirline.addEventListener('click', () => setActiveTab('airline'), { signal: listeners.signal });
@@ -534,152 +712,110 @@ export function mountStudio(root) {
     state.bgImage = temp;
     const bgBadge = getElement('bgStatusBadge');
     if (bgBadge) {
-      bgBadge.textContent = 'Default Scenery Ready';
-      bgBadge.className = 'text-[10px] text-emerald-500 font-mono-avionics font-bold';
+      bgBadge.textContent = '';
     }
     renderAll();
   }
 
 
-  // Procedural Generator: Bright Daylight Snowy Mountain Scenery
-  function createSyntheticLightBgImage() {
-    const temp = document.createElement('canvas');
-    temp.width = CANVAS_WIDTH;
-    temp.height = CANVAS_HEIGHT;
-    const ctx = temp.getContext('2d');
-
-    // Bright sunlit azure sky gradient
-    const sky = ctx.createLinearGradient(0, 0, 0, CANVAS_HEIGHT);
-    sky.addColorStop(0, '#7ecbf7');
-    sky.addColorStop(0.35, '#bce5fc');
-    sky.addColorStop(0.7, '#e4f5fd');
-    sky.addColorStop(1, '#ffffff');
-    ctx.fillStyle = sky;
-    ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-
-    // Bright fluffy cumulus clouds
-    ctx.fillStyle = "rgba(255, 255, 255, 0.75)";
-    for (let i = 0; i < 20; i++) {
-      ctx.beginPath();
-      ctx.ellipse(i * 350, 450 + (i % 4) * 90, 500, 160, 0, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    // Snow-capped sunlit mountain range
-    ctx.fillStyle = "#dbeafe";
-    ctx.beginPath();
-    ctx.moveTo(0, CANVAS_HEIGHT * 0.75);
-    ctx.lineTo(CANVAS_WIDTH * 0.25, CANVAS_HEIGHT * 0.48);
-    ctx.lineTo(CANVAS_WIDTH * 0.5, CANVAS_HEIGHT * 0.42);
-    ctx.lineTo(CANVAS_WIDTH * 0.78, CANVAS_HEIGHT * 0.52);
-    ctx.lineTo(CANVAS_WIDTH, CANVAS_HEIGHT * 0.44);
-    ctx.lineTo(CANVAS_WIDTH, CANVAS_HEIGHT);
-    ctx.lineTo(0, CANVAS_HEIGHT);
-    ctx.fill();
-
-    // Pure white snow ridges
-    ctx.fillStyle = "#ffffff";
-    ctx.beginPath();
-    ctx.moveTo(CANVAS_WIDTH * 0.4, CANVAS_HEIGHT * 0.45);
-    ctx.lineTo(CANVAS_WIDTH * 0.5, CANVAS_HEIGHT * 0.42);
-    ctx.lineTo(CANVAS_WIDTH * 0.62, CANVAS_HEIGHT * 0.47);
-    ctx.lineTo(CANVAS_WIDTH * 0.5, CANVAS_HEIGHT * 0.55);
-    ctx.closePath();
-    ctx.fill();
-
-    return temp;
-  }
-
-  // Procedural Generator: Deep Night Atmosphere Scenery
-  function createSyntheticDarkBgImage() {
-    const temp = document.createElement('canvas');
-    temp.width = CANVAS_WIDTH;
-    temp.height = CANVAS_HEIGHT;
-    const ctx = temp.getContext('2d');
-
-    // Deep dark night sky
-    const sky = ctx.createLinearGradient(0, 0, 0, CANVAS_HEIGHT);
-    sky.addColorStop(0, '#030712');
-    sky.addColorStop(0.4, '#090d16');
-    sky.addColorStop(0.8, '#0b1120');
-    sky.addColorStop(1, '#020617');
-    ctx.fillStyle = sky;
-    ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-
-    // Night runway tarmac silhouette
-    ctx.fillStyle = "#02040a";
-    ctx.fillRect(0, CANVAS_HEIGHT * 0.65, CANVAS_WIDTH, CANVAS_HEIGHT * 0.35);
-
-    // Distant amber & cyan airport runway lights
-    for (let x = 80; x < CANVAS_WIDTH; x += 120) {
-      ctx.fillStyle = (x % 240 === 0) ? "rgba(56, 189, 248, 0.85)" : "rgba(251, 191, 36, 0.85)";
-      ctx.beginPath();
-      ctx.arc(x, CANVAS_HEIGHT * 0.68 + (Math.sin(x) * 15), 4, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    return temp;
-  }
-
-  // Helper: Get active airline logo Image object (with immediate on-demand fallback)
+  // Helper: Get active airline logo Image object (respecting selected light/dark variant)
   function getActiveAirlineLogo() {
     const key = state.selectedAirlineKey;
     if (!key) return null;
     if (state.customLogoOverrides[key]) {
       return state.customLogoOverrides[key];
     }
-    if (loadedAirlineLogos[key]) {
-      return loadedAirlineLogos[key];
+    const variant = state.logoVariant || 'dark';
+    const variantKey = `${key}_${variant}`;
+    if (loadedAirlineLogos[variantKey]) {
+      return loadedAirlineLogos[variantKey];
     }
-    // Immediate fallback if preloading was in progress or delayed
-    if (embeddedLogoDataUrls[key]) {
+    const profile = airlineProfiles[key];
+    if (!profile) return null;
+
+    const targetUrl = variant === 'dark'
+      ? (profile.logoDarkUrl || profile.logoLightUrl || profile.logoUrl)
+      : (profile.logoLightUrl || profile.logoDarkUrl || profile.logoUrl);
+
+    if (targetUrl) {
       const img = new Image();
       img.crossOrigin = "anonymous";
-      img.onload = () => renderAll();
-      img.src = embeddedLogoDataUrls[key];
-      loadedAirlineLogos[key] = img;
+      loadedAirlineLogos[variantKey] = img;
+      img.onload = () => {
+        const trimmed = trimTransparentImage(img);
+        const finalImg = (trimmed && (trimmed.naturalWidth || trimmed._trimmedCanvas)) ? trimmed : img;
+        loadedAirlineLogos[variantKey] = finalImg;
+        cacheLogoImage(variantKey, finalImg);
+        if (state.selectedAirlineKey === key) {
+          updateSidebarLogoPreview();
+          renderAll();
+        }
+      };
+      img.src = targetUrl;
       return img;
     }
     return null;
   }
 
-  // Update sidebar logo preview card
+  // Update sidebar logo preview cards
   function updateSidebarLogoPreview() {
-    const previewBox = getElement('logoPreviewBox');
-    const previewImg = getElement('sidebarLogoPreview');
-    const resetBtn = getElement('btnResetAirlineLogo');
+    const imgLight = getElement('imgLogoVariantLight');
+    const imgDark = getElement('imgLogoVariantDark');
+    const noLightLabel = getElement('noLightLogoLabel');
+    const noDarkLabel = getElement('noDarkLogoLabel');
 
-    if (!state.selectedAirlineKey) {
-      // Nothing selected: completely blank box
-      previewBox.style.background = '#090e18';
-      previewImg.removeAttribute('src');
-      previewImg.classList.add('hidden');
-      if (resetBtn) resetBtn.classList.add('hidden');
+    const key = state.selectedAirlineKey;
+    const profile = airlineProfiles[key];
+
+    if (!key || !profile) {
+      if (imgLight) {
+        imgLight.removeAttribute('src');
+        imgLight.classList.add('hidden');
+      }
+      if (imgDark) {
+        imgDark.removeAttribute('src');
+        imgDark.classList.add('hidden');
+      }
+      if (noLightLabel) noLightLabel.classList.add('hidden');
+      if (noDarkLabel) noDarkLabel.classList.add('hidden');
       return;
     }
 
-    previewBox.style.background = `linear-gradient(180deg, ${state.topBrandColor} 0%, #090d16 100%)`;
-
-    const activeLogo = getActiveAirlineLogo();
-    if (activeLogo && activeLogo.src) {
-      previewImg.src = activeLogo.src;
-      previewImg.classList.remove('hidden');
-      previewImg.style.filter = state.logoForceWhite ? 'brightness(0) invert(1) drop-shadow(0 2px 6px rgba(0,0,0,0.85))' : 'drop-shadow(0 2px 6px rgba(0,0,0,0.85))';
+    // Light variant thumbnail
+    const cachedLight = loadedAirlineLogos[`${key}_light`];
+    const lightUrl = (cachedLight && cachedLight.src) || profile.logoLightUrl || profile.logoUrl;
+    if (lightUrl && imgLight) {
+      if (imgLight.getAttribute('src') !== lightUrl) {
+        imgLight.src = lightUrl;
+      }
+      imgLight.classList.remove('hidden');
+      if (noLightLabel) noLightLabel.classList.add('hidden');
     } else {
-      previewImg.removeAttribute('src');
-      previewImg.classList.add('hidden');
+      if (imgLight) {
+        imgLight.removeAttribute('src');
+        imgLight.classList.add('hidden');
+      }
+      if (noLightLabel) noLightLabel.classList.remove('hidden');
     }
 
-    const uploadBtnText = getElement('uploadLogoBtnText');
-    if (uploadBtnText) {
-      uploadBtnText.textContent = state.selectedAirlineKey === 'CUSTOM' ? '📁 Upload Logo PNG' : '📁 Replace / Upload Logo PNG';
-    }
-
-    if (state.customLogoOverrides[state.selectedAirlineKey] && embeddedLogoDataUrls[state.selectedAirlineKey]) {
-      if (resetBtn) resetBtn.classList.remove('hidden');
+    // Dark variant thumbnail
+    const cachedDark = loadedAirlineLogos[`${key}_dark`];
+    const darkUrl = (cachedDark && cachedDark.src) || profile.logoDarkUrl || profile.logoUrl;
+    if (darkUrl && imgDark) {
+      if (imgDark.getAttribute('src') !== darkUrl) {
+        imgDark.src = darkUrl;
+      }
+      imgDark.classList.remove('hidden');
+      if (noDarkLabel) noDarkLabel.classList.add('hidden');
     } else {
-      if (resetBtn) resetBtn.classList.add('hidden');
+      if (imgDark) {
+        imgDark.removeAttribute('src');
+        imgDark.classList.add('hidden');
+      }
+      if (noDarkLabel) noDarkLabel.classList.remove('hidden');
     }
+
+    setLogoVariant(state.logoVariant || 'dark', false);
   }
 
   // --- FULL RESOLUTION (5664 x 2500) RENDER ENGINE ---
@@ -694,7 +830,12 @@ export function mountStudio(root) {
 
     if (state.bgImage) {
       targetCtx.save();
-      targetCtx.filter = `brightness(${state.bgBright}%) contrast(${state.bgContrast}%) saturate(${state.bgSat}%)`;
+      // Photo Grading: scale is -50 to +50 with 0 as default untouched image (100% CSS filter)
+      // Brightness: + increases exposure/brightens, - darkens
+      // Contrast: + lifts shadows/brightens, - deepens blacks/darkens
+      const effectiveBright = 100 + (Number(state.bgBright) || 0);
+      const effectiveContrast = 100 - (Number(state.bgContrast) || 0);
+      targetCtx.filter = `brightness(${effectiveBright}%) contrast(${effectiveContrast}%) saturate(${state.bgSat}%)`;
 
       if (state.isForceScaled) {
         // Force image to exactly 5664 × 2500 centered
@@ -729,19 +870,6 @@ export function mountStudio(root) {
       grad.addColorStop(1, '#02060b');
       targetCtx.fillStyle = grad;
       targetCtx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-    }
-
-    // 1b. Optional Bottom Scrim Vignette (from Photo Grading & Scrim panel)
-    if (state.botScrim > 0) {
-      targetCtx.save();
-      const scrimHeight = Math.round(CANVAS_HEIGHT * 0.45);
-      const scrimY = CANVAS_HEIGHT - scrimHeight;
-      const scrimGrad = targetCtx.createLinearGradient(0, CANVAS_HEIGHT, 0, scrimY);
-      scrimGrad.addColorStop(0, `rgba(0, 0, 0, ${(state.botScrim / 100) * 0.7})`);
-      scrimGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-      targetCtx.fillStyle = scrimGrad;
-      targetCtx.fillRect(0, scrimY, CANVAS_WIDTH, scrimHeight);
-      targetCtx.restore();
     }
 
     // 2. TOP GRADIENT (Top color to transparent with individual opacity control)
@@ -783,16 +911,31 @@ export function mountStudio(root) {
       targetCtx.shadowBlur = 20;
 
       const noticeText = "PLEASE SELECT A PROFILE TO BEGIN";
+      const subNoticeText = "CLICK THE [ ? ] AT THE TOP FOR A BRIEF TUTORIAL";
+      const centerY = CANVAS_HEIGHT / 2;
+      const titleY = centerY - 38;
+      const subtitleY = centerY + 52;
+
       targetCtx.font = "700 80px 'Chakra Petch', 'JetBrains Mono', monospace";
       targetCtx.fillStyle = "#ffffff";
       targetCtx.textAlign = "center";
       targetCtx.textBaseline = "middle";
       if (targetCtx.letterSpacing !== undefined) {
         targetCtx.letterSpacing = "6px";
-        targetCtx.fillText(noticeText, CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
+        targetCtx.fillText(noticeText, CANVAS_WIDTH / 2, titleY);
         targetCtx.letterSpacing = "0px";
       } else {
-        targetCtx.fillText(noticeText, CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
+        targetCtx.fillText(noticeText, CANVAS_WIDTH / 2, titleY);
+      }
+
+      targetCtx.font = "600 38px 'Chakra Petch', 'JetBrains Mono', monospace";
+      targetCtx.fillStyle = "rgba(255, 255, 255, 0.75)";
+      if (targetCtx.letterSpacing !== undefined) {
+        targetCtx.letterSpacing = "4px";
+        targetCtx.fillText(subNoticeText, CANVAS_WIDTH / 2, subtitleY);
+        targetCtx.letterSpacing = "0px";
+      } else {
+        targetCtx.fillText(subNoticeText, CANVAS_WIDTH / 2, subtitleY);
       }
       targetCtx.restore();
     } else {
@@ -808,7 +951,7 @@ export function mountStudio(root) {
     const curY = state.hdrPosY;
     const activeLogo = getActiveAirlineLogo();
     const hasDimensions = activeLogo && ((activeLogo.naturalWidth && activeLogo.naturalWidth > 0) || (activeLogo.width && activeLogo.width > 0));
-    const useLogo = state.headerMode === 'logo' && activeLogo && (activeLogo.complete || hasDimensions);
+    const useLogo = Boolean(activeLogo) && (activeLogo.complete || hasDimensions);
 
     if (activeLogo && !activeLogo.complete && !activeLogo._hasRenderHook) {
       activeLogo._hasRenderHook = true;
@@ -823,65 +966,81 @@ export function mountStudio(root) {
 
     let drewFirstItem = false;
 
+    // Base optical center line from Header Y (anchors pipe divider and suffix text)
+    const headerCenterY = Math.round(curY);
+
+    // Dedicated Logo center line (Logo Y Offset moves the logo independently without moving suffix text)
+    const logoCenterY = Math.round(curY + state.logoOffsetY);
+
     if (renderAirlinePart) {
       if (useLogo && hasDimensions) {
-        // A) Draw Official Airline Logo Image
-        const imgW = activeLogo.naturalWidth || activeLogo.width;
-        const imgH = activeLogo.naturalHeight || activeLogo.height;
-        const aspect = imgW / imgH;
+        // A) Draw Official Airline Logo Image (full unclipped logo, preserved dimensions)
+        const rawW = activeLogo.naturalWidth || activeLogo.width;
+        const rawH = activeLogo.naturalHeight || activeLogo.height;
+        const aspect = rawW / rawH;
         const drawH = state.hdrAirlineSize;
         const drawW = Math.round(drawH * aspect);
-        const drawY = Math.round(curY - (drawH / 2) + state.logoOffsetY);
+        const drawY = Math.round(logoCenterY - (drawH / 2));
+        const logoDrawX = Math.round(curX + (state.logoOffsetX || 0));
 
         if (state.logoForceWhite) {
           const whiteLogoCanvas = createWhiteSilhouetteCanvas(activeLogo, drawW, drawH);
-          targetCtx.drawImage(whiteLogoCanvas, curX, drawY, drawW, drawH);
+          targetCtx.drawImage(whiteLogoCanvas, logoDrawX, drawY, drawW, drawH);
         } else {
-          targetCtx.drawImage(activeLogo, curX, drawY, drawW, drawH);
+          targetCtx.drawImage(activeLogo, logoDrawX, drawY, drawW, drawH);
         }
-        curX += drawW + state.hdrDividerGap;
+        curX += drawW + BASE_DIVIDER_GAP;
         drewFirstItem = true;
       } else if (state.airlineName && state.airlineName.trim().length > 0) {
         // Fallback: Airline Name Text
-        const profile = airlineProfiles[state.selectedAirlineKey] || airlineProfiles.ANZ;
+        const profile = airlineProfiles[state.selectedAirlineKey] || Object.values(airlineProfiles).find(p => p.name !== "Custom Airline") || fallbackAirlineProfile;
         const airlineFontStr = profile.fontCss.replace('{size}', state.hdrAirlineSize);
         targetCtx.font = airlineFontStr;
         targetCtx.fillStyle = "#ffffff";
         targetCtx.textBaseline = "middle";
+        const airlineDrawX = Math.round(curX + (state.logoOffsetX || 0));
 
         if (targetCtx.letterSpacing !== undefined && profile.letterSpacing) {
           targetCtx.letterSpacing = profile.letterSpacing;
-          targetCtx.fillText(state.airlineName, curX, curY);
-          curX += targetCtx.measureText(state.airlineName).width + state.hdrDividerGap;
+          targetCtx.fillText(state.airlineName, airlineDrawX, logoCenterY);
+          curX += targetCtx.measureText(state.airlineName).width + BASE_DIVIDER_GAP;
           targetCtx.letterSpacing = "0px";
         } else {
-          targetCtx.fillText(state.airlineName, curX, curY);
-          curX += targetCtx.measureText(state.airlineName).width + state.hdrDividerGap;
+          targetCtx.fillText(state.airlineName, airlineDrawX, logoCenterY);
+          curX += targetCtx.measureText(state.airlineName).width + BASE_DIVIDER_GAP;
         }
         drewFirstItem = true;
       }
     }
 
-    // B) Subtle Vertical Pipe Divider "|" (Render only if both airline/logo and suffix are visible)
+    // Apply Suffix X Offset to shift both the pipe divider "|" and suffix text together
+    curX += (state.suffixOffsetX || 0);
+
+    // B) Subtle Vertical Pipe Divider "|"
     if (drewFirstItem && renderSuffixPart && state.suffixName && state.suffixName.trim().length > 0) {
-      targetCtx.font = `300 ${Math.round(state.hdrSuffixSize * 0.85)}px 'Inter', sans-serif`;
+      const refSize = Math.max(state.hdrAirlineSize, state.hdrSuffixSize || UNIFORM_SUFFIX_SIZE);
+      const dividerH = Math.round(refSize * 0.72);
+      const dividerY = Math.round(headerCenterY - (dividerH / 2));
       targetCtx.fillStyle = "rgba(255, 255, 255, 0.65)";
-      targetCtx.textBaseline = "middle";
-      targetCtx.fillText("|", curX, curY - 2);
-      curX += targetCtx.measureText("|").width + state.hdrDividerGap;
+      targetCtx.fillRect(curX, dividerY, 3, dividerH);
+      curX += 3 + BASE_DIVIDER_GAP;
     }
 
-    // C) "Focus Airport" Suffix
+    // Dedicated Suffix center line (Suffix Y Offset moves the suffix independently)
+    const suffixCenterY = Math.round(curY + (state.suffixOffsetY || 0));
+
+    // C) "Focus Airport" Suffix (Anchored to Header Y + Suffix Y Offset, moved with Suffix X Offset)
     if (renderSuffixPart && state.suffixName && state.suffixName.trim().length > 0) {
-      targetCtx.font = `500 ${state.hdrSuffixSize}px 'Inter', sans-serif`;
+      const suffixScale = state.hdrSuffixSize || UNIFORM_SUFFIX_SIZE;
+      targetCtx.font = `500 ${suffixScale}px 'Inter', sans-serif`;
       targetCtx.fillStyle = "#ffffff";
       targetCtx.textBaseline = "middle";
       if (targetCtx.letterSpacing !== undefined) {
-        targetCtx.letterSpacing = "3px";
-        targetCtx.fillText(state.suffixName, curX, curY);
+        targetCtx.letterSpacing = "2px";
+        targetCtx.fillText(state.suffixName, curX, suffixCenterY);
         targetCtx.letterSpacing = "0px";
       } else {
-        targetCtx.fillText(state.suffixName, curX, curY);
+        targetCtx.fillText(state.suffixName, curX, suffixCenterY);
       }
     }
     targetCtx.restore();
@@ -958,8 +1117,6 @@ export function mountStudio(root) {
       targetCtx.textAlign = "center";
       targetCtx.textBaseline = "alphabetic";
       targetCtx.fillText(icaoStr, anchorX, icaoY);
-
-      const icaoMeasuredWidth = targetCtx.measureText(icaoStr).width;
 
       // City Name Centered Below ICAO:
       // City can freely extend past ICAO width centered under it.
@@ -1151,7 +1308,7 @@ export function mountStudio(root) {
   function updatePreviewDimensions() {
     const containerRect = viewportContainer.getBoundingClientRect();
     const padding = 32;
-    const footerExtra = 34; // headroom for bottom tagline
+    const footerExtra = 28; // Space for bottom center specs badge [ 5664 × 2500 px | Target: < 2.0 MB JPG ]
     const availW = Math.max(280, containerRect.width - padding);
     const availH = Math.max(180, containerRect.height - padding - footerExtra);
 
@@ -1181,105 +1338,182 @@ export function mountStudio(root) {
     previewCtx.scale(previewCanvas.width / CANVAS_WIDTH, previewCanvas.height / CANVAS_HEIGHT);
     previewCtx.drawImage(renderCanvas, 0, 0);
     previewCtx.restore();
+  }
 
-    const pct = Math.round((displayW / CANVAS_WIDTH) * 100);
-    const badge = getElement('viewportScaleBadge');
-    if (badge) {
-      badge.textContent = `${pct}% View`;
+  function updateWorkspaceFlowBreadcrumb() {
+    const crumbActivity = getElement('crumbActivity');
+    const crumbSepActivity = getElement('crumbSepActivity');
+    const crumbAirline = getElement('crumbAirline');
+    const crumbSepAirline = getElement('crumbSepAirline');
+    const crumbAirport = getElement('crumbAirport');
+    const crumbSepAirport = getElement('crumbSepAirport');
+
+    const profile = airlineProfiles[state.selectedAirlineKey];
+    const hasAirline = Boolean(profile && profile.name);
+
+    const icaoInput = getElement('icaoInput');
+    const cityInput = getElement('cityInput');
+    const icaoVal = (icaoInput && icaoInput.value.trim().toUpperCase()) || (state.airport && state.airport.icao) || '';
+    let cityVal = (cityInput && cityInput.value.trim()) || (state.airport && state.airport.city) || '';
+    if (cityVal === '[INVALID AIRPORT]') {
+      cityVal = '';
+    }
+    const hasAirport = Boolean(icaoVal || cityVal);
+
+    // If neither airline nor airport has been selected, hide all trailing breadcrumbs
+    if (!hasAirline && !hasAirport) {
+      if (crumbActivity) crumbActivity.classList.add('hidden');
+      if (crumbSepActivity) crumbSepActivity.classList.add('hidden');
+      if (crumbAirline) crumbAirline.classList.add('hidden');
+      if (crumbSepAirline) crumbSepAirline.classList.add('hidden');
+      if (crumbAirport) crumbAirport.classList.add('hidden');
+      if (crumbSepAirport) crumbSepAirport.classList.add('hidden');
+      return;
+    }
+
+    // 1. Activity Type
+    const suffixInput = getElement('hdrSuffixText');
+    const activityText = (suffixInput && suffixInput.value.trim()) || state.suffixName || 'Focus Airport';
+    if (crumbActivity) {
+      crumbActivity.textContent = activityText;
+      crumbActivity.classList.remove('hidden');
+    }
+    if (crumbSepActivity) crumbSepActivity.classList.remove('hidden');
+
+    // 2. Airline
+    if (hasAirline) {
+      if (crumbAirline) {
+        const airlineCode = profile.code || profile.icao || (state.selectedAirlineKey !== 'CUSTOM' ? state.selectedAirlineKey : '');
+        const hasCodeAlready = airlineCode && (profile.name.includes(`(${airlineCode})`) || profile.name.endsWith(` ${airlineCode}`));
+        const displayText = (airlineCode && !hasCodeAlready) ? `${profile.name} (${airlineCode})` : profile.name;
+        crumbAirline.textContent = displayText;
+        crumbAirline.title = displayText;
+        crumbAirline.classList.remove('hidden');
+      }
+      if (crumbSepAirline) crumbSepAirline.classList.remove('hidden');
+    } else {
+      if (crumbAirline) crumbAirline.classList.add('hidden');
+      if (crumbSepAirline) crumbSepAirline.classList.add('hidden');
+    }
+
+    // 3. ICAO - City
+    if (hasAirport) {
+      let airportText = '';
+      if (icaoVal && cityVal) {
+        airportText = `${icaoVal} - ${cityVal}`;
+      } else if (icaoVal) {
+        airportText = icaoVal;
+      } else if (cityVal) {
+        airportText = cityVal;
+      }
+      if (crumbAirport) {
+        crumbAirport.textContent = airportText;
+        crumbAirport.classList.remove('hidden');
+      }
+      if (crumbSepAirport) crumbSepAirport.classList.remove('hidden');
+    } else {
+      if (crumbAirport) crumbAirport.classList.add('hidden');
+      if (crumbSepAirport) crumbSepAirport.classList.add('hidden');
     }
   }
 
   function renderAll() {
     updateSidebarLogoPreview();
     updatePreviewDimensions();
+    updateWorkspaceFlowBreadcrumb();
   }
 
-  // --- HEADER MODE SWITCHER (Logo Image vs Text Style) ---
-  function setHeaderMode(mode) {
-    state.headerMode = mode;
-    const btnLogo = getElement('btnModeLogo');
-    const btnText = getElement('btnModeText');
-    const logoSection = getElement('logoPreviewSection');
-    const textBox = getElement('textModeInputBox');
+  // --- LOGO VARIANT SWITCHER (Light Logo vs Dark Logo) ---
+  function setLogoVariant(variant, shouldRender = true) {
+    state.logoVariant = variant;
+    const cardLight = getElement('logoVariantCardLight');
+    const cardDark = getElement('logoVariantCardDark');
+    const badgeLight = getElement('badgeLightActive');
+    const badgeDark = getElement('badgeDarkActive');
     const sizeLabel = getElement('hdrAirlineSizeLabel');
-    const isDark = document.body.classList.contains('theme-dark');
 
-    const activeBtn = isDark
-      ? "px-2.5 py-0.5 rounded bg-white text-black font-bold transition shadow-sm"
-      : "px-2.5 py-0.5 rounded bg-black text-white font-bold transition shadow-sm";
-    const inactiveBtn = isDark
-      ? "px-2.5 py-0.5 rounded text-zinc-400 hover:text-white transition"
-      : "px-2.5 py-0.5 rounded text-zinc-600 hover:text-black transition";
-
-    if (mode === 'logo') {
-      btnLogo.className = activeBtn;
-      btnText.className = inactiveBtn;
-      logoSection.classList.remove('hidden');
-      textBox.classList.add('hidden');
-      sizeLabel.textContent = "Logo Height:";
+    if (variant === 'light') {
+      if (cardLight) {
+        cardLight.className = "h-16 rounded-lg border border-sky-500 p-2.5 flex items-center justify-center relative overflow-hidden cursor-pointer shadow-inner bg-slate-100 ring-2 ring-sky-500 transition select-none group";
+      }
+      if (cardDark) {
+        cardDark.className = "h-16 rounded-lg border border-slate-700/80 p-2.5 flex items-center justify-center relative overflow-hidden cursor-pointer shadow-inner bg-slate-800 opacity-60 hover:opacity-100 transition select-none group";
+      }
+      if (badgeLight) badgeLight.classList.remove('hidden');
+      if (badgeDark) badgeDark.classList.add('hidden');
     } else {
-      btnText.className = activeBtn;
-      btnLogo.className = inactiveBtn;
-      logoSection.classList.add('hidden');
-      textBox.classList.remove('hidden');
-      sizeLabel.textContent = "Airline Size:";
+      if (cardDark) {
+        cardDark.className = "h-16 rounded-lg border border-sky-500 p-2.5 flex items-center justify-center relative overflow-hidden cursor-pointer shadow-inner bg-slate-800 ring-2 ring-sky-500 transition select-none group";
+      }
+      if (cardLight) {
+        cardLight.className = "h-16 rounded-lg border border-slate-300 p-2.5 flex items-center justify-center relative overflow-hidden cursor-pointer shadow-inner bg-slate-100 opacity-70 hover:opacity-100 transition select-none group";
+      }
+      if (badgeDark) badgeDark.classList.remove('hidden');
+      if (badgeLight) badgeLight.classList.add('hidden');
     }
-    if (typeof updateCustomTogglesVisibility === 'function') {
-      updateCustomTogglesVisibility();
+
+    if (sizeLabel) sizeLabel.textContent = "Logo Scale:";
+
+    if (shouldRender) {
+      renderAll();
     }
-    renderAll();
   }
 
-  function updateExportButtonState() {
+  function updateExportButtonState(isSaving = false) {
     const btnExport = getElement('btnTopExport');
-    const iconSpan = getElement('exportBtnIcon');
     if (!btnExport) return;
     const hasAirline = Boolean(state.selectedAirlineKey);
+    updateViewportCursor();
+
+    if (isSaving) {
+      btnExport.disabled = true;
+      btnExport.classList.add('opacity-75', 'cursor-wait');
+      btnExport.innerHTML = `
+        <span id="exportBtnIcon">
+          <svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+          </svg>
+        </span>
+        <span id="exportBtnLabel">Saving...</span>
+      `;
+      return;
+    }
+
     btnExport.disabled = !hasAirline;
+    btnExport.classList.remove('opacity-75', 'cursor-wait');
 
-    if (viewportContainer) {
-      if (hasAirline) {
-        viewportContainer.classList.remove('cursor-default');
-        viewportContainer.classList.add('cursor-grab', 'active:cursor-grabbing');
-      } else {
-        viewportContainer.classList.remove('cursor-grab', 'active:cursor-grabbing');
-        viewportContainer.classList.add('cursor-default');
-      }
-    }
+    const iconSvg = hasAirline
+      ? `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>`
+      : `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>`;
 
-    if (iconSpan) {
-      if (hasAirline) {
-        // Download icon (arrow pointing down into tray)
-        iconSpan.innerHTML = `
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-          </svg>
-        `;
-        btnExport.setAttribute('title', 'Download custom banner');
-      } else {
-        // X icon when unavailable
-        iconSpan.innerHTML = `
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
-          </svg>
-        `;
-        btnExport.setAttribute('title', 'Select an airline profile first');
-      }
-    }
+    btnExport.innerHTML = `
+      <span id="exportBtnIcon">${iconSvg}</span>
+      <span id="exportBtnLabel">Download Banner</span>
+    `;
+    btnExport.setAttribute('title', hasAirline ? 'Download custom banner' : 'Select an airline profile first');
   }
 
   // --- AIRLINE PRESET SWITCHER ---
   function setAirline(key) {
+    // AUDIT NOTE: "CUSTOM" profile selection is temporarily disabled. Keep logic intact for audits and future re-enablement.
+    if (key === 'CUSTOM') {
+      return;
+    }
     state.selectedAirlineKey = key;
     updateExportButtonState();
+    updateTabAvailabilityUI();
     const dependentControls = getElement('airlineDependentControls');
 
     if (!key) {
       if (dependentControls) {
         dependentControls.classList.add('opacity-40', 'pointer-events-none');
       }
-      getElement('airlineBadge').textContent = 'NONE SELECTED';
+      getElement('airlineBadge').textContent = '';
       getElement('airlineBadge').className = 'text-[10px] text-slate-400 font-mono-avionics font-bold';
+      if (typeof updateControlLocksUI === 'function') {
+        updateControlLocksUI();
+      }
       renderAll();
       return;
     }
@@ -1301,18 +1535,63 @@ export function mountStudio(root) {
     state.airlineName = profile.name;
     state.suffixName = profile.suffix;
     state.topBrandColor = profile.brandColor;
-    state.hdrAirlineSize = profile.defaultLogoHeight || 160;
+    state.hdrAirlineSize = profile.defaultLogoHeight || UNIFORM_LOGO_SIZE;
+    state.hdrSuffixSize = profile.defaultSuffixSize || UNIFORM_SUFFIX_SIZE;
+    state.logoOffsetX = profile.defaultLogoOffsetX !== undefined ? profile.defaultLogoOffsetX : 0;
+    state.logoOffsetY = profile.defaultLogoOffsetY !== undefined ? profile.defaultLogoOffsetY : 0;
+    state.suffixOffsetX = profile.defaultSuffixOffsetX !== undefined ? profile.defaultSuffixOffsetX : 0;
+    state.suffixOffsetY = profile.defaultSuffixOffsetY !== undefined ? profile.defaultSuffixOffsetY : 0;
 
-    getElement('hdrAirlineText').value = profile.name;
-    getElement('hdrSuffixText').value = profile.suffix;
+    state.suffixName = profile.suffix || "Focus Airport";
+    const hdrSuffixInput = getElement('hdrSuffixText');
+    if (hdrSuffixInput) hdrSuffixInput.value = state.suffixName;
     getElement('topGradColor').value = profile.brandColor;
     getElement('topGradHex').value = profile.brandColor.toUpperCase();
     getElement('airlineBadge').textContent = profile.name.toUpperCase();
-    getElement('hdrAirlineSize').value = state.hdrAirlineSize;
-    getElement('hdrAirlineSizeVal').textContent = `${state.hdrAirlineSize}px`;
+    const logoScaleInput = getElement('hdrAirlineSize');
+    if (logoScaleInput) logoScaleInput.value = state.hdrAirlineSize;
+    const logoScaleVal = getElement('hdrAirlineSizeVal');
+    if (logoScaleVal) logoScaleVal.textContent = `${state.hdrAirlineSize}px`;
+
+    const logoOffsetXInput = getElement('logoOffsetX');
+    if (logoOffsetXInput) logoOffsetXInput.value = state.logoOffsetX;
+    const logoOffsetXVal = getElement('logoOffsetXVal');
+    if (logoOffsetXVal) logoOffsetXVal.textContent = `${state.logoOffsetX}px`;
+
+    const logoOffsetYInput = getElement('logoOffsetY');
+    if (logoOffsetYInput) logoOffsetYInput.value = state.logoOffsetY;
+    const logoOffsetYVal = getElement('logoOffsetYVal');
+    if (logoOffsetYVal) logoOffsetYVal.textContent = `${state.logoOffsetY}px`;
+
+    const suffixScaleInput = getElement('hdrSuffixSize');
+    if (suffixScaleInput) suffixScaleInput.value = state.hdrSuffixSize;
+    const suffixScaleVal = getElement('hdrSuffixSizeVal');
+    if (suffixScaleVal) suffixScaleVal.textContent = `${state.hdrSuffixSize}px`;
+
+    const suffixOffsetXInput = getElement('suffixOffsetX');
+    if (suffixOffsetXInput) suffixOffsetXInput.value = state.suffixOffsetX;
+    const suffixOffsetXVal = getElement('suffixOffsetXVal');
+    if (suffixOffsetXVal) suffixOffsetXVal.textContent = `${state.suffixOffsetX}px`;
+
+    const suffixOffsetYInput = getElement('suffixOffsetY');
+    if (suffixOffsetYInput) suffixOffsetYInput.value = state.suffixOffsetY;
+    const suffixOffsetYVal = getElement('suffixOffsetYVal');
+    if (suffixOffsetYVal) suffixOffsetYVal.textContent = `${state.suffixOffsetY}px`;
+    state.hdrPosX = profile.defaultHeaderX !== undefined ? profile.defaultHeaderX : DEFAULT_HEADER_X;
+    const hdrPosXInput = getElement('hdrPosX');
+    if (hdrPosXInput) hdrPosXInput.value = state.hdrPosX;
+    const hdrPosXVal = getElement('hdrPosXVal');
+    if (hdrPosXVal) hdrPosXVal.textContent = `${state.hdrPosX}px`;
+
+    if (typeof updateControlLocksUI === 'function') {
+      updateControlLocksUI();
+    }
+
+    // Reset to dark logo variant by default when selecting an airline
+    state.logoVariant = 'dark';
+    setLogoVariant('dark', false);
 
     if (key === 'CUSTOM') {
-      setHeaderMode('text');
       // Reveal Custom feature toggles panel
       const togglesPanel = getElement('customTogglesPanel');
       if (togglesPanel) togglesPanel.classList.remove('hidden');
@@ -1320,8 +1599,6 @@ export function mountStudio(root) {
         updateCustomTogglesVisibility();
       }
     } else {
-      const hasLogo = getActiveAirlineLogo() !== null;
-      setHeaderMode(hasLogo ? 'logo' : 'text');
       const togglesPanel = getElement('customTogglesPanel');
       const customBoxCard = getElement('customTextBoxCard');
       if (togglesPanel) togglesPanel.classList.add('hidden');
@@ -1330,6 +1607,12 @@ export function mountStudio(root) {
         updateCustomTogglesVisibility();
       }
     }
+
+    // Prioritize loading selected airline's logos immediately
+    preloadAirline(key);
+
+    // Immediately trigger render & update sidebar preview thumbnails
+    renderAll();
   }
 
   // --- STRICT BINARY SEARCH JPEG COMPRESSOR (< 2,000,000 Bytes) ---
@@ -1377,41 +1660,36 @@ export function mountStudio(root) {
   }
 
   function getCanvasBlob(canvas, quality) {
-    return new Promise((resolve) => {
-      canvas.toBlob((blob) => resolve(blob), 'image/jpeg', quality);
+    return new Promise((resolve, reject) => {
+      try {
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            reject(new Error("Canvas toBlob produced an empty image."));
+          } else {
+            resolve(blob);
+          }
+        }, 'image/jpeg', quality);
+      } catch (err) {
+        reject(err);
+      }
     });
-  }
-
-  function formatBytes(bytes) {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const mb = (bytes / (k * k)).toFixed(2);
-    const kb = (bytes / k).toFixed(0);
-    return `${mb} MB (${kb} KB)`;
   }
 
   // --- SINGLE EXPORT HANDLER ---
   async function handleSingleExport() {
     const btnExport = getElement("btnTopExport");
-    const originalText = btnExport ? btnExport.innerHTML : "";
+    if (!btnExport || !state.selectedAirlineKey) return;
 
-    if (btnExport) {
-      btnExport.disabled = true;
-      btnExport.classList.add("opacity-75", "cursor-wait");
-      btnExport.innerHTML = `
-        <svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
-        </svg>
-        <span>Saving...</span>
-      `;
-    }
-
-    // Redraw fresh high-res canvas
-    drawFullCanvas(renderCtx);
+    updateExportButtonState(true);
 
     try {
+      // Redraw fresh high-res canvas
+      drawFullCanvas(renderCtx);
+
       const result = await compressToStrictLimit(renderCanvas);
+      if (!result || !result.blob) {
+        throw new Error("Failed to generate image file from banner canvas.");
+      }
 
       // Filename formula: (3 digit airline code_icao_suffixtext) e.g. FFT_KLAS_FocusAirport.jpg
       const airlineCode = (state.selectedAirlineKey || "AIR").replace(/[^a-zA-Z0-9]/g, "");
@@ -1420,10 +1698,6 @@ export function mountStudio(root) {
       // Remove spaces and special characters to make suffix text one word with no spaces
       const cleanSuffix = rawSuffix.replace(/[^a-zA-Z0-9]/g, "") || "FocusAirport";
       const fileName = `${airlineCode}_${cleanIcao}_${cleanSuffix}.jpg`;
-
-      const finalBadge = `${(result.bytes / (1024 * 1024)).toFixed(2)} MB / 2.00 MB`;
-      const footerBadge = getElement("footerSizeBadge");
-      if (footerBadge) footerBadge.textContent = finalBadge;
 
       // Trigger direct file download
       const blobUrl = URL.createObjectURL(result.blob);
@@ -1437,16 +1711,13 @@ export function mountStudio(root) {
       setTimeout(() => {
         if (a.parentNode) document.body.removeChild(a);
         URL.revokeObjectURL(blobUrl);
-      }, 1500);
+      }, 45000);
 
     } catch (err) {
       console.error("Compression/download failed:", err);
       alert("Export failed: " + err.message);
     } finally {
-      if (btnExport) {
-        btnExport.classList.remove("opacity-75", "cursor-wait");
-        updateExportButtonState();
-      }
+      updateExportButtonState(false);
     }
   }
 
@@ -1504,6 +1775,9 @@ export function mountStudio(root) {
       renderAll();
       return;
     }
+
+    // Only allow dragging the backdrop when in the backdrop tab
+    if (activeTabId !== 'scenery') return;
 
     state.isDragging = true;
     state.dragStartX = e.clientX;
@@ -1588,6 +1862,9 @@ export function mountStudio(root) {
         renderAll();
         return;
       }
+
+      // Only allow dragging the backdrop when in the backdrop tab
+      if (activeTabId !== 'scenery') return;
 
       state.isDragging = true;
       state.dragStartX = e.touches[0].clientX;
@@ -1707,85 +1984,31 @@ export function mountStudio(root) {
   getElement('airlineDropdown').addEventListener('change', (e) => {
     setAirline(e.target.value);
   }, { signal: listeners.signal });
-  getElement('btnModeLogo').addEventListener('click', () => setHeaderMode('logo'), { signal: listeners.signal });
-  getElement('btnModeText').addEventListener('click', () => setHeaderMode('text'), { signal: listeners.signal });
+  const cardLogoLight = getElement('logoVariantCardLight');
+  if (cardLogoLight) {
+    cardLogoLight.addEventListener('click', () => setLogoVariant('light'), { signal: listeners.signal });
+  }
+  const cardLogoDark = getElement('logoVariantCardDark');
+  if (cardLogoDark) {
+    cardLogoDark.addEventListener('click', () => setLogoVariant('dark'), { signal: listeners.signal });
+  }
 
-  // Custom Logo Upload Warning Dialog Logic
-  const btnTriggerLogoUpload = getElement('btnTriggerLogoUpload');
-  const logoWarningModal = getElement('logoWarningModal');
-  const btnCancelLogoUpload = getElement('btnCancelLogoUpload');
-  const btnProceedLogoUpload = getElement('btnProceedLogoUpload');
-  const warningAirlineName = getElement('warningAirlineName');
-  const customLogoInput = getElement('customLogoInput');
-
-  btnTriggerLogoUpload.addEventListener('click', () => {
-    if (state.selectedAirlineKey === 'CUSTOM') {
-      // Direct upload without warning dialog for Custom
-      customLogoInput.click();
-      return;
-    }
-    const profile = airlineProfiles[state.selectedAirlineKey];
-    warningAirlineName.textContent = profile ? profile.name : state.selectedAirlineKey;
-    logoWarningModal.classList.remove('hidden');
-  }, { signal: listeners.signal });
-
-  btnCancelLogoUpload.addEventListener('click', () => {
-    logoWarningModal.classList.add('hidden');
-    customLogoInput.value = "";
-  }, { signal: listeners.signal });
-
-  btnProceedLogoUpload.addEventListener('click', () => {
-    logoWarningModal.classList.add('hidden');
-    customLogoInput.click();
-  }, { signal: listeners.signal });
-
-  // Custom Logo Upload / Override for active airline with persistent storage
-  customLogoInput.addEventListener('change', (e) => {
-    if (e.target.files && e.target.files[0]) {
-      const activeKey = state.selectedAirlineKey;
-      const reader = new FileReader();
-      reader.onload = (evt) => {
-        const rawImg = new Image();
-        rawImg.crossOrigin = "anonymous";
-        rawImg.onload = async () => {
-          const trimmedImg = trimTransparentImage(rawImg);
-          trimmedImg.onload = async () => {
-            state.customLogoOverrides[activeKey] = trimmedImg;
-            // Persist trimmed image dataUrl so it survives page reloads
-            await saveLogoToStorage(activeKey, trimmedImg.src);
-            setHeaderMode('logo');
-            renderAll();
-          };
-        };
-        rawImg.src = evt.target.result;
-      };
-      reader.readAsDataURL(e.target.files[0]);
-    }
-  }, { signal: listeners.signal });
-
-  getElement('btnResetAirlineLogo').addEventListener('click', async () => {
-    const activeKey = state.selectedAirlineKey;
-    delete state.customLogoOverrides[activeKey];
-    await removeLogoFromStorage(activeKey);
-    customLogoInput.value = "";
-    renderAll();
-  }, { signal: listeners.signal });
-
-  getElement('hdrAirlineText').addEventListener('input', (e) => {
-    state.airlineName = e.target.value;
-    renderAll();
-  }, { signal: listeners.signal });
-  getElement('hdrSuffixText').addEventListener('input', (e) => {
-    state.suffixName = e.target.value;
-    renderAll();
-  }, { signal: listeners.signal });
+  const hdrSuffixInput = getElement('hdrSuffixText');
+  if (hdrSuffixInput) {
+    hdrSuffixInput.addEventListener('input', (e) => {
+      state.suffixName = e.target.value;
+      renderAll();
+    }, { signal: listeners.signal });
+  }
   // Top Gradient Color, Opacity & Depth
   getElement('topGradColor').addEventListener('input', (e) => {
+    if (state.lockGradients) return;
     state.topBrandColor = e.target.value;
     getElement('topGradHex').value = e.target.value.toUpperCase();
     renderAll();
   }, { signal: listeners.signal });
   getElement('topGradHex').addEventListener('input', (e) => {
+    if (state.lockGradients) return;
     let val = e.target.value.trim();
     if (!val.startsWith('#') && val.length === 6) val = '#' + val;
     state.topBrandColor = val;
@@ -1793,11 +2016,13 @@ export function mountStudio(root) {
     renderAll();
   }, { signal: listeners.signal });
   getElement('topGradOpacity').addEventListener('input', (e) => {
+    if (state.lockGradients) return;
     state.topGradOpacity = parseInt(e.target.value, 10);
     getElement('topGradOpacityVal').textContent = `${e.target.value}%`;
     renderAll();
   }, { signal: listeners.signal });
   getElement('topGradDepth').addEventListener('input', (e) => {
+    if (state.lockGradients) return;
     state.topGradDepth = parseInt(e.target.value, 10);
     getElement('topGradDepthVal').textContent = `${e.target.value}px`;
     renderAll();
@@ -1805,11 +2030,13 @@ export function mountStudio(root) {
 
   // Bottom Gradient Color, Opacity & Depth
   getElement('botGradColor').addEventListener('input', (e) => {
+    if (state.lockGradients) return;
     state.botBrandColor = e.target.value;
     getElement('botGradHex').value = e.target.value.toUpperCase();
     renderAll();
   }, { signal: listeners.signal });
   getElement('botGradHex').addEventListener('input', (e) => {
+    if (state.lockGradients) return;
     let val = e.target.value.trim();
     if (!val.startsWith('#') && val.length === 6) val = '#' + val;
     state.botBrandColor = val;
@@ -1817,93 +2044,335 @@ export function mountStudio(root) {
     renderAll();
   }, { signal: listeners.signal });
   getElement('botGradOpacity').addEventListener('input', (e) => {
+    if (state.lockGradients) return;
     state.botGradOpacity = parseInt(e.target.value, 10);
     getElement('botGradOpacityVal').textContent = `${e.target.value}%`;
     renderAll();
   }, { signal: listeners.signal });
   getElement('botGradDepth').addEventListener('input', (e) => {
+    if (state.lockGradients) return;
     state.botGradDepth = parseInt(e.target.value, 10);
     getElement('botGradDepthVal').textContent = `${e.target.value}px`;
     renderAll();
   }, { signal: listeners.signal });
 
-  // Reset Top Gradient (Opacity -> 75%, Depth -> 500px)
+  // Reset Top Gradient (Opacity -> 90%, Depth -> 450px)
   getElement('btnResetTopGradDepth').addEventListener('click', () => {
-    state.topGradOpacity = 75;
-    state.topGradDepth = 500;
-    getElement('topGradOpacity').value = 75;
-    getElement('topGradOpacityVal').textContent = '75%';
-    getElement('topGradDepth').value = 500;
-    getElement('topGradDepthVal').textContent = '500px';
+    if (state.lockGradients) return;
+    state.topGradOpacity = 90;
+    state.topGradDepth = 450;
+    getElement('topGradOpacity').value = 90;
+    getElement('topGradOpacityVal').textContent = '90%';
+    getElement('topGradDepth').value = 450;
+    getElement('topGradDepthVal').textContent = '450px';
     renderAll();
   }, { signal: listeners.signal });
 
-  // Reset Bottom Gradient (Opacity -> 75%, Depth -> 500px)
+  // Reset Bottom Gradient (Opacity -> 90%, Depth -> 450px)
   getElement('btnResetBotGradDepth').addEventListener('click', () => {
-    state.botGradOpacity = 75;
-    state.botGradDepth = 500;
-    getElement('botGradOpacity').value = 75;
-    getElement('botGradOpacityVal').textContent = '75%';
-    getElement('botGradDepth').value = 500;
-    getElement('botGradDepthVal').textContent = '500px';
+    if (state.lockGradients) return;
+    state.botGradOpacity = 90;
+    state.botGradDepth = 450;
+    getElement('botGradOpacity').value = 90;
+    getElement('botGradOpacityVal').textContent = '90%';
+    getElement('botGradDepth').value = 450;
+    getElement('botGradDepthVal').textContent = '450px';
     renderAll();
   }, { signal: listeners.signal });
-  getElement('hdrAirlineSize').addEventListener('input', (e) => {
-    state.hdrAirlineSize = parseInt(e.target.value, 10);
-    getElement('hdrAirlineSizeVal').textContent = `${e.target.value}px`;
-    renderAll();
-  }, { signal: listeners.signal });
-  getElement('hdrSuffixSize').addEventListener('input', (e) => {
-    state.hdrSuffixSize = parseInt(e.target.value, 10);
-    getElement('hdrSuffixSizeVal').textContent = `${e.target.value}px`;
-    renderAll();
-  }, { signal: listeners.signal });
-  getElement('logoOffsetY').addEventListener('input', (e) => {
-    state.logoOffsetY = parseInt(e.target.value, 10) || 0;
-    getElement('logoOffsetYVal').textContent = `${e.target.value}px`;
-    renderAll();
-  }, { signal: listeners.signal });
-  getElement('hdrDividerGap').addEventListener('input', (e) => {
-    state.hdrDividerGap = parseInt(e.target.value, 10) || 44;
-    getElement('hdrDividerGapVal').textContent = `${e.target.value}px`;
-    renderAll();
-  }, { signal: listeners.signal });
+  // Logo Scale (formerly Logo Height)
+  const hdrAirlineSizeInput = getElement('hdrAirlineSize');
+  if (hdrAirlineSizeInput) {
+    hdrAirlineSizeInput.addEventListener('input', (e) => {
+      if (state.lockSizesOffsets) return;
+      state.hdrAirlineSize = parseInt(e.target.value, 10);
+      const valEl = getElement('hdrAirlineSizeVal');
+      if (valEl) valEl.textContent = `${e.target.value}px`;
+      renderAll();
+    }, { signal: listeners.signal });
+  }
 
-  // Reset Logo Height, Focus Size, Logo Y Offset, and Divider Gap
-  getElement('btnResetHdrDimensions').addEventListener('click', () => {
-    const profile = airlineProfiles[state.selectedAirlineKey] || airlineProfiles.ANZ;
-    state.hdrAirlineSize = profile.defaultLogoHeight || 160;
-    state.hdrSuffixSize = 148;
-    state.logoOffsetY = 0;
-    state.hdrDividerGap = 44;
+  // Logo X Offset
+  const logoOffsetXInput = getElement('logoOffsetX');
+  if (logoOffsetXInput) {
+    logoOffsetXInput.addEventListener('input', (e) => {
+      if (state.lockSizesOffsets) return;
+      state.logoOffsetX = parseInt(e.target.value, 10) || 0;
+      const valEl = getElement('logoOffsetXVal');
+      if (valEl) valEl.textContent = `${state.logoOffsetX}px`;
+      renderAll();
+    }, { signal: listeners.signal });
+  }
 
-    getElement('hdrAirlineSize').value = state.hdrAirlineSize;
-    getElement('hdrAirlineSizeVal').textContent = `${state.hdrAirlineSize}px`;
-    getElement('hdrSuffixSize').value = 148;
-    getElement('hdrSuffixSizeVal').textContent = '148px';
-    getElement('logoOffsetY').value = 0;
-    getElement('logoOffsetYVal').textContent = '0px';
-    getElement('hdrDividerGap').value = 44;
-    getElement('hdrDividerGapVal').textContent = '44px';
+  // Logo Y Offset
+  const logoOffsetYInput = getElement('logoOffsetY');
+  if (logoOffsetYInput) {
+    logoOffsetYInput.addEventListener('input', (e) => {
+      if (state.lockSizesOffsets) return;
+      state.logoOffsetY = parseInt(e.target.value, 10) || 0;
+      const valEl = getElement('logoOffsetYVal');
+      if (valEl) valEl.textContent = `${e.target.value}px`;
+      renderAll();
+    }, { signal: listeners.signal });
+  }
 
-    renderAll();
-  }, { signal: listeners.signal });
+  // Logo Reset Button (Resets Logo Scale, Logo X Offset, and Logo Y Offset to defaults)
+  const btnResetLogo = getElement('btnResetLogoOffsets');
+  if (btnResetLogo) {
+    btnResetLogo.addEventListener('click', () => {
+      if (state.lockSizesOffsets) return;
+      const profile = airlineProfiles[state.selectedAirlineKey] || Object.values(airlineProfiles).find(p => p.name !== "Custom Airline") || fallbackAirlineProfile;
+      state.hdrAirlineSize = profile.defaultLogoHeight || UNIFORM_LOGO_SIZE;
+      state.logoOffsetX = profile.defaultLogoOffsetX !== undefined ? profile.defaultLogoOffsetX : 0;
+      state.logoOffsetY = profile.defaultLogoOffsetY !== undefined ? profile.defaultLogoOffsetY : 0;
+
+      const sizeInput = getElement('hdrAirlineSize');
+      if (sizeInput) sizeInput.value = state.hdrAirlineSize;
+      const sizeVal = getElement('hdrAirlineSizeVal');
+      if (sizeVal) sizeVal.textContent = `${state.hdrAirlineSize}px`;
+
+      const xInput = getElement('logoOffsetX');
+      if (xInput) xInput.value = state.logoOffsetX;
+      const xVal = getElement('logoOffsetXVal');
+      if (xVal) xVal.textContent = `${state.logoOffsetX}px`;
+
+      const yInput = getElement('logoOffsetY');
+      if (yInput) yInput.value = state.logoOffsetY;
+      const yVal = getElement('logoOffsetYVal');
+      if (yVal) yVal.textContent = `${state.logoOffsetY}px`;
+
+      renderAll();
+    }, { signal: listeners.signal });
+  }
+
+  // Suffix Scale Slider
+  const hdrSuffixSizeInput = getElement('hdrSuffixSize');
+  if (hdrSuffixSizeInput) {
+    hdrSuffixSizeInput.addEventListener('input', (e) => {
+      if (state.lockSizesOffsets) return;
+      state.hdrSuffixSize = parseInt(e.target.value, 10) || UNIFORM_SUFFIX_SIZE;
+      const valEl = getElement('hdrSuffixSizeVal');
+      if (valEl) valEl.textContent = `${state.hdrSuffixSize}px`;
+      renderAll();
+    }, { signal: listeners.signal });
+  }
+
+  // Suffix X Offset Slider
+  const suffixOffsetXInput = getElement('suffixOffsetX');
+  if (suffixOffsetXInput) {
+    suffixOffsetXInput.addEventListener('input', (e) => {
+      if (state.lockSizesOffsets) return;
+      const val = parseInt(e.target.value, 10) || 0;
+      state.suffixOffsetX = val;
+      const valEl = getElement('suffixOffsetXVal');
+      if (valEl) valEl.textContent = `${val}px`;
+      renderAll();
+    }, { signal: listeners.signal });
+  }
+
+  // Suffix Y Offset Slider
+  const suffixOffsetYInput = getElement('suffixOffsetY');
+  if (suffixOffsetYInput) {
+    suffixOffsetYInput.addEventListener('input', (e) => {
+      if (state.lockSizesOffsets) return;
+      const val = parseInt(e.target.value, 10) || 0;
+      state.suffixOffsetY = val;
+      const valEl = getElement('suffixOffsetYVal');
+      if (valEl) valEl.textContent = `${val}px`;
+      renderAll();
+    }, { signal: listeners.signal });
+  }
+
+  // Suffix Reset Button (Resets Suffix Scale, Suffix X Offset, and Suffix Y Offset to defaults)
+  const btnResetSuffix = getElement('btnResetSuffixOffsets');
+  if (btnResetSuffix) {
+    btnResetSuffix.addEventListener('click', () => {
+      if (state.lockSizesOffsets) return;
+      const profile = airlineProfiles[state.selectedAirlineKey] || Object.values(airlineProfiles).find(p => p.name !== "Custom Airline") || fallbackAirlineProfile;
+      state.hdrSuffixSize = profile.defaultSuffixSize || UNIFORM_SUFFIX_SIZE;
+      state.suffixOffsetX = profile.defaultSuffixOffsetX !== undefined ? profile.defaultSuffixOffsetX : 0;
+      state.suffixOffsetY = profile.defaultSuffixOffsetY !== undefined ? profile.defaultSuffixOffsetY : 0;
+
+      const sizeInput = getElement('hdrSuffixSize');
+      if (sizeInput) sizeInput.value = state.hdrSuffixSize;
+      const sizeVal = getElement('hdrSuffixSizeVal');
+      if (sizeVal) sizeVal.textContent = `${state.hdrSuffixSize}px`;
+
+      const xInput = getElement('suffixOffsetX');
+      if (xInput) xInput.value = state.suffixOffsetX;
+      const xVal = getElement('suffixOffsetXVal');
+      if (xVal) xVal.textContent = `${state.suffixOffsetX}px`;
+
+      const yInput = getElement('suffixOffsetY');
+      if (yInput) yInput.value = state.suffixOffsetY;
+      const yVal = getElement('suffixOffsetYVal');
+      if (yVal) yVal.textContent = `${state.suffixOffsetY}px`;
+
+      renderAll();
+    }, { signal: listeners.signal });
+  }
 
   // Reset Header X
   getElement('btnResetHdrX').addEventListener('click', () => {
-    state.hdrPosX = 180;
-    getElement('hdrPosX').value = 180;
-    getElement('hdrPosXVal').textContent = '180px';
+    if (state.lockHeaderPos) return;
+    const profile = airlineProfiles[state.selectedAirlineKey] || Object.values(airlineProfiles).find(p => p.name !== "Custom Airline") || fallbackAirlineProfile;
+    state.hdrPosX = profile && profile.defaultHeaderX !== undefined ? profile.defaultHeaderX : DEFAULT_HEADER_X;
+    getElement('hdrPosX').value = state.hdrPosX;
+    getElement('hdrPosXVal').textContent = `${state.hdrPosX}px`;
     renderAll();
   }, { signal: listeners.signal });
 
   // Reset Header Y
   getElement('btnResetHdrY').addEventListener('click', () => {
+    if (state.lockHeaderPos) return;
     state.hdrPosY = 175;
     getElement('hdrPosY').value = 175;
     getElement('hdrPosYVal').textContent = '175px';
     renderAll();
   }, { signal: listeners.signal });
+
+  // ==========================================
+  // SECTION LOCK CONTROLS: Gradient Options, Header Position, and Sizes & Offsets
+  // ==========================================
+  // Helper to cleanly lock/unlock form controls and buttons
+  function setElementLocked(el, isLocked) {
+    if (!el) return;
+    el.disabled = isLocked;
+    if (isLocked) {
+      el.setAttribute('disabled', '');
+      el.classList.add('opacity-40', 'cursor-not-allowed', 'pointer-events-none');
+    } else {
+      el.removeAttribute('disabled');
+      el.classList.remove('opacity-40', 'cursor-not-allowed', 'pointer-events-none');
+    }
+  }
+
+  function updateGradientLockUI() {
+    const hasAirline = Boolean(state.selectedAirlineKey);
+    const isLocked = Boolean(state.lockGradients);
+    const btn = getElement('btnLockGradients');
+    const icon = getElement('lockIconGradients');
+    if (icon) icon.textContent = isLocked ? "🔒" : "🔓";
+    if (btn) {
+      btn.title = !hasAirline
+        ? "Select an airline profile first to unlock"
+        : (isLocked ? "Gradient controls are locked. Click to toggle unlock." : "Gradient controls are unlocked. Click to toggle lock.");
+      const baseClass = isLocked 
+        ? "p-1 rounded text-xs bg-amber-500/20 text-amber-400 border border-amber-500/40 flex items-center justify-center transition shadow-sm leading-none" 
+        : "p-1 rounded text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center transition shadow-sm leading-none";
+      btn.className = !hasAirline 
+        ? `${baseClass} cursor-not-allowed opacity-60 pointer-events-none` 
+        : `${baseClass} hover:opacity-90 cursor-pointer pointer-events-auto`;
+    }
+
+    [
+      'topGradColor',
+      'topGradHex',
+      'topGradOpacity',
+      'topGradDepth',
+      'btnResetTopGradDepth',
+      'botGradColor',
+      'botGradHex',
+      'botGradOpacity',
+      'botGradDepth',
+      'btnResetBotGradDepth'
+    ].forEach(id => setElementLocked(getElement(id), isLocked || !hasAirline));
+  }
+
+  function updateHeaderPosLockUI() {
+    const hasAirline = Boolean(state.selectedAirlineKey);
+    const isLocked = Boolean(state.lockHeaderPos);
+    const btn = getElement('btnLockHeaderPos');
+    const icon = getElement('lockIconHeaderPos');
+    if (icon) icon.textContent = isLocked ? "🔒" : "🔓";
+    if (btn) {
+      btn.title = !hasAirline
+        ? "Select an airline profile first to unlock"
+        : (isLocked ? "Header position controls are locked. Click to toggle unlock." : "Header position controls are unlocked. Click to toggle lock.");
+      const baseClass = isLocked 
+        ? "p-1 rounded text-xs bg-amber-500/20 text-amber-400 border border-amber-500/40 flex items-center justify-center transition shadow-sm leading-none" 
+        : "p-1 rounded text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center transition shadow-sm leading-none";
+      btn.className = !hasAirline 
+        ? `${baseClass} cursor-not-allowed opacity-60 pointer-events-none` 
+        : `${baseClass} hover:opacity-90 cursor-pointer pointer-events-auto`;
+    }
+
+    [
+      'hdrPosX',
+      'hdrPosY',
+      'btnResetHdrX',
+      'btnResetHdrY'
+    ].forEach(id => setElementLocked(getElement(id), isLocked || !hasAirline));
+  }
+
+  function updateSizesOffsetsLockUI() {
+    const hasAirline = Boolean(state.selectedAirlineKey);
+    const isLocked = Boolean(state.lockSizesOffsets);
+    const btn = getElement('btnLockSizesOffsets');
+    const icon = getElement('lockIconSizesOffsets');
+    if (icon) icon.textContent = isLocked ? "🔒" : "🔓";
+    if (btn) {
+      btn.title = !hasAirline
+        ? "Select an airline profile first to unlock"
+        : (isLocked ? "Sizes & offsets controls are locked. Click to toggle unlock." : "Sizes & offsets controls are unlocked. Click to toggle lock.");
+      const baseClass = isLocked 
+        ? "p-1 rounded text-xs bg-amber-500/20 text-amber-400 border border-amber-500/40 flex items-center justify-center transition shadow-sm leading-none" 
+        : "p-1 rounded text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center transition shadow-sm leading-none";
+      btn.className = !hasAirline 
+        ? `${baseClass} cursor-not-allowed opacity-60 pointer-events-none` 
+        : `${baseClass} hover:opacity-90 cursor-pointer pointer-events-auto`;
+    }
+
+    [
+      'hdrAirlineSize',
+      'logoOffsetX',
+      'logoOffsetY',
+      'btnResetLogoOffsets',
+      'hdrSuffixSize',
+      'suffixOffsetX',
+      'suffixOffsetY',
+      'btnResetSuffixOffsets'
+    ].forEach(id => {
+      const el = getElement(id);
+      if (el) setElementLocked(el, isLocked || !hasAirline);
+    });
+  }
+
+  function updateControlLocksUI() {
+    updateGradientLockUI();
+    updateHeaderPosLockUI();
+    updateSizesOffsetsLockUI();
+  }
+
+  const btnLockGradients = getElement('btnLockGradients');
+  if (btnLockGradients) {
+    btnLockGradients.addEventListener('click', () => {
+      if (!state.selectedAirlineKey) return;
+      state.lockGradients = !state.lockGradients;
+      updateGradientLockUI();
+    }, { signal: listeners.signal });
+  }
+
+  const btnLockHeaderPos = getElement('btnLockHeaderPos');
+  if (btnLockHeaderPos) {
+    btnLockHeaderPos.addEventListener('click', () => {
+      if (!state.selectedAirlineKey) return;
+      state.lockHeaderPos = !state.lockHeaderPos;
+      updateHeaderPosLockUI();
+    }, { signal: listeners.signal });
+  }
+
+  const btnLockSizesOffsets = getElement('btnLockSizesOffsets');
+  if (btnLockSizesOffsets) {
+    btnLockSizesOffsets.addEventListener('click', () => {
+      if (!state.selectedAirlineKey) return;
+      state.lockSizesOffsets = !state.lockSizesOffsets;
+      updateSizesOffsetsLockUI();
+    }, { signal: listeners.signal });
+  }
+
+  // Initial call to sync locks on attach
+  updateControlLocksUI();
+
   // Button toggles for Header Drop Shadow and Force Pure White
   const btnToggleHdrShadow = getElement('btnToggleHdrShadow');
   const btnToggleForceWhite = getElement('btnToggleForceWhite');
@@ -1918,6 +2387,7 @@ export function mountStudio(root) {
     btnToggleHdrShadow.className = state.hdrShadow ? activeClass : inactiveClass;
     btnToggleForceWhite.className = state.logoForceWhite ? activeClass : inactiveClass;
   }
+  updateHdrButtonsUI();
 
   btnToggleHdrShadow.addEventListener('click', () => {
     state.hdrShadow = !state.hdrShadow;
@@ -1931,11 +2401,13 @@ export function mountStudio(root) {
     renderAll();
   }, { signal: listeners.signal });
   getElement('hdrPosX').addEventListener('input', (e) => {
+    if (state.lockHeaderPos) return;
     state.hdrPosX = parseInt(e.target.value, 10) || 0;
     getElement('hdrPosXVal').textContent = `${state.hdrPosX}px`;
     renderAll();
   }, { signal: listeners.signal });
   getElement('hdrPosY').addEventListener('input', (e) => {
+    if (state.lockHeaderPos) return;
     state.hdrPosY = parseInt(e.target.value, 10) || 0;
     getElement('hdrPosYVal').textContent = `${state.hdrPosY}px`;
     renderAll();
@@ -1958,15 +2430,15 @@ export function mountStudio(root) {
 
     // 1. Header Brand Master Toggle & Sub-Controls
     const brandModeSec = getElement('headerBrandModeSection');
-    const logoPreviewSec = getElement('logoPreviewSection');
-    const textModeBox = getElement('textModeInputBox');
     const airlineSizeCol = getElement('hdrAirlineSizeCol');
     const logoOffsetYCol = getElement('logoOffsetYCol');
     const suffixSec = getElement('suffixTextInputSection');
     const suffixSizeCol = getElement('hdrSuffixSizeCol');
     const dividerGapCol = getElement('hdrDividerGapCol');
+    const suffixOffsetYCol = getElement('suffixOffsetYCol');
     const sizesOffsetsSec = getElement('sizesOffsetsSection');
     const headerPosSec = getElement('headerPositionSection');
+    const effectsSec = getElement('headerEffectsSection');
 
     if (isCustom) {
       // Sub-toggles container visibility
@@ -1978,20 +2450,21 @@ export function mountStudio(root) {
         if (brandModeSec) brandModeSec.style.display = 'none';
         if (sizesOffsetsSec) sizesOffsetsSec.style.display = 'none';
         if (headerPosSec) headerPosSec.style.display = 'none';
+        if (effectsSec) effectsSec.style.display = 'none';
       } else {
         // Header Brand is ON: show options according to individual sub-toggles
         const hasAnyHeaderItem = state.showAirlineName || state.showSuffixText;
         if (brandModeSec) brandModeSec.style.display = hasAnyHeaderItem ? '' : 'none';
         if (sizesOffsetsSec) sizesOffsetsSec.style.display = hasAnyHeaderItem ? '' : 'none';
         if (headerPosSec) headerPosSec.style.display = hasAnyHeaderItem ? '' : 'none';
+        if (effectsSec) effectsSec.style.display = hasAnyHeaderItem ? '' : 'none';
 
-        if (textModeBox) textModeBox.style.display = state.showAirlineName ? '' : 'none';
-        if (logoPreviewSec) logoPreviewSec.style.display = state.showAirlineName ? '' : 'none';
         if (airlineSizeCol) airlineSizeCol.style.display = state.showAirlineName ? '' : 'none';
         if (logoOffsetYCol) logoOffsetYCol.style.display = state.showAirlineName ? '' : 'none';
 
         if (suffixSec) suffixSec.style.display = state.showSuffixText ? '' : 'none';
         if (suffixSizeCol) suffixSizeCol.style.display = state.showSuffixText ? '' : 'none';
+        if (suffixOffsetYCol) suffixOffsetYCol.style.display = state.showSuffixText ? '' : 'none';
 
         if (dividerGapCol) {
           dividerGapCol.style.display = (state.showAirlineName && state.showSuffixText) ? '' : 'none';
@@ -2000,15 +2473,15 @@ export function mountStudio(root) {
     } else {
       if (headerBrandSubToggles) headerBrandSubToggles.style.display = '';
       if (brandModeSec) brandModeSec.style.display = '';
-      if (textModeBox) textModeBox.style.display = '';
-      if (logoPreviewSec) logoPreviewSec.style.display = '';
       if (airlineSizeCol) airlineSizeCol.style.display = '';
       if (logoOffsetYCol) logoOffsetYCol.style.display = '';
       if (suffixSec) suffixSec.style.display = '';
       if (suffixSizeCol) suffixSizeCol.style.display = '';
+      if (suffixOffsetYCol) suffixOffsetYCol.style.display = '';
       if (dividerGapCol) dividerGapCol.style.display = '';
       if (sizesOffsetsSec) sizesOffsetsSec.style.display = '';
       if (headerPosSec) headerPosSec.style.display = '';
+      if (effectsSec) effectsSec.style.display = '';
     }
 
     // 2. Gradients Master Toggle & Sub-Controls
@@ -2102,8 +2575,6 @@ export function mountStudio(root) {
 
   // Custom Text Box Card Listeners
   const chkEnableCustomBox = getElement('chkEnableCustomBox');
-  const customBoxStatusLabel = getElement('customBoxStatusLabel');
-  const customBoxSubControls = getElement('customBoxSubControls');
   const customBoxTextInput = getElement('customBoxTextInput');
   const customBoxBgColor = getElement('customBoxBgColor');
   const customBoxBgHex = getElement('customBoxBgHex');
@@ -2330,43 +2801,210 @@ export function mountStudio(root) {
     }, { signal: listeners.signal });
   }
 
-  // 2. Background Photo Upload & Drag-and-Drop
+  // 2. Background Photo Upload & Drag-and-Drop (DropZone + Canvas Preview)
   const dropZone = getElement('dropZone');
   const filePicker = getElement('filePicker');
+  const canvasDropOverlay = getElement('canvasDropOverlay');
+  let canvasDragCounter = 0;
 
-  dropZone.addEventListener('click', () => filePicker.click(), { signal: listeners.signal });
-  dropZone.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    dropZone.classList.add('border-zinc-400');
-  }, { signal: listeners.signal });
-  dropZone.addEventListener('dragleave', () => {
-    dropZone.classList.remove('border-zinc-400');
-  }, { signal: listeners.signal });
-  dropZone.addEventListener('drop', (e) => {
-    e.preventDefault();
-    dropZone.classList.remove('border-zinc-400');
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      loadLocalImageFile(e.dataTransfer.files[0]);
+  function isCanvasDropAllowed() {
+    return Boolean(state.selectedAirlineKey) && activeTabId === 'scenery';
+  }
+
+  function isImageDragEvent(e) {
+    if (!e.dataTransfer) return false;
+    const types = Array.from(e.dataTransfer.types || []);
+    return types.includes('Files') || types.includes('text/uri-list') || types.includes('text/html') || types.includes('text/plain');
+  }
+
+  function showCanvasDropOverlay() {
+    if (canvasDropOverlay) {
+      canvasDropOverlay.classList.remove('opacity-0');
+      canvasDropOverlay.classList.add('opacity-100');
+    }
+    if (bannerContainer) {
+      bannerContainer.classList.add('ring-2', 'ring-sky-400', 'shadow-[0_0_30px_rgba(56,189,248,0.35)]');
+    }
+  }
+
+  function hideCanvasDropOverlay() {
+    if (canvasDropOverlay) {
+      canvasDropOverlay.classList.remove('opacity-100');
+      canvasDropOverlay.classList.add('opacity-0');
+    }
+    if (bannerContainer) {
+      bannerContainer.classList.remove('ring-2', 'ring-sky-400', 'shadow-[0_0_30px_rgba(56,189,248,0.35)]');
+    }
+  }
+
+  function handleImageDrop(e) {
+    if (!e.dataTransfer) return;
+
+    // 1. Files dropped directly from disk
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const file = Array.from(e.dataTransfer.files).find(f =>
+        f.type.startsWith('image/') || /\.(jpe?g|png|webp|avif|bmp|gif|svg)$/i.test(f.name)
+      );
+      if (file) {
+        loadLocalImageFile(file);
+        return;
+      }
+    }
+
+    // 2. Dragged image from another webpage or browser window
+    const uriList = e.dataTransfer.getData('text/uri-list');
+    const html = e.dataTransfer.getData('text/html');
+    const text = e.dataTransfer.getData('text/plain');
+
+    let imageUrl = null;
+
+    if (uriList) {
+      const firstUri = uriList.split(/[\r\n]+/)[0].trim();
+      if (/^https?:\/\//i.test(firstUri) || firstUri.startsWith('data:image/')) {
+        imageUrl = firstUri;
+      }
+    }
+
+    if (!imageUrl && html) {
+      const match = html.match(/<img[^>]+src=["']([^"']+)["']/i);
+      if (match && match[1]) {
+        imageUrl = match[1];
+      }
+    }
+
+    if (!imageUrl && text) {
+      const trimmed = text.trim();
+      if (/^https?:\/\/.*\.(jpe?g|png|webp|avif|gif|bmp)(\?.*)?$/i.test(trimmed) || trimmed.startsWith('data:image/')) {
+        imageUrl = trimmed;
+      }
+    }
+
+    if (imageUrl) {
+      loadSceneryFromUrl(imageUrl);
+    }
+  }
+
+  // Viewport Container & Banner Canvas Drag-and-Drop
+  // Only active when an airline profile is selected AND currently in the BACKDROP tab
+  if (viewportContainer) {
+    viewportContainer.addEventListener('dragenter', (e) => {
+      if (!isCanvasDropAllowed() || !isImageDragEvent(e)) return;
+      e.preventDefault();
+      canvasDragCounter++;
+      showCanvasDropOverlay();
+    }, { signal: listeners.signal });
+
+    viewportContainer.addEventListener('dragover', (e) => {
+      if (!isCanvasDropAllowed() || !isImageDragEvent(e)) return;
+      e.preventDefault();
+      if (e.dataTransfer) {
+        e.dataTransfer.dropEffect = 'copy';
+      }
+    }, { signal: listeners.signal });
+
+    viewportContainer.addEventListener('dragleave', (e) => {
+      if (!isCanvasDropAllowed()) {
+        canvasDragCounter = 0;
+        hideCanvasDropOverlay();
+        return;
+      }
+      e.preventDefault();
+      canvasDragCounter--;
+      if (canvasDragCounter <= 0) {
+        canvasDragCounter = 0;
+        hideCanvasDropOverlay();
+      }
+    }, { signal: listeners.signal });
+
+    viewportContainer.addEventListener('drop', (e) => {
+      if (!isCanvasDropAllowed()) {
+        canvasDragCounter = 0;
+        hideCanvasDropOverlay();
+        return;
+      }
+      e.preventDefault();
+      canvasDragCounter = 0;
+      hideCanvasDropOverlay();
+      handleImageDrop(e);
+    }, { signal: listeners.signal });
+  }
+
+  // Prevent browser window from opening image file if dropped outside canvas targets
+  window.addEventListener('dragover', (e) => {
+    if (e.dataTransfer && Array.from(e.dataTransfer.types || []).includes('Files')) {
+      e.preventDefault();
     }
   }, { signal: listeners.signal });
-  filePicker.addEventListener('change', (e) => {
-    if (e.target.files && e.target.files[0]) {
-      loadLocalImageFile(e.target.files[0]);
+
+  window.addEventListener('drop', (e) => {
+    if (e.dataTransfer && Array.from(e.dataTransfer.types || []).includes('Files')) {
+      e.preventDefault();
     }
+    canvasDragCounter = 0;
+    hideCanvasDropOverlay();
   }, { signal: listeners.signal });
+
+  window.addEventListener('dragend', () => {
+    canvasDragCounter = 0;
+    hideCanvasDropOverlay();
+  }, { signal: listeners.signal });
+
+  // Sidebar Drop Zone Drag-and-Drop
+  if (dropZone) {
+    dropZone.addEventListener('click', () => filePicker && filePicker.click(), { signal: listeners.signal });
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('border-zinc-400');
+      if (e.dataTransfer) {
+        e.dataTransfer.dropEffect = 'copy';
+      }
+    }, { signal: listeners.signal });
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('border-zinc-400');
+    }, { signal: listeners.signal });
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropZone.classList.remove('border-zinc-400');
+      if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
+        loadLocalImageFile(e.dataTransfer.files[0]);
+      } else {
+        handleImageDrop(e);
+      }
+    }, { signal: listeners.signal });
+  }
+
+  if (filePicker) {
+    filePicker.addEventListener('change', (e) => {
+      if (e.target.files && e.target.files[0]) {
+        loadLocalImageFile(e.target.files[0]);
+        e.target.value = '';
+      }
+    }, { signal: listeners.signal });
+  }
 
   function loadLocalImageFile(file) {
+    if (!file) return;
+    const isImage = file.type.startsWith('image/') || /\.(jpe?g|png|webp|avif|bmp|gif|svg)$/i.test(file.name);
+    if (!isImage) {
+      alert("Please drop a valid image file (JPG, PNG, WebP, AVIF).");
+      return;
+    }
     const reader = new FileReader();
     reader.onload = (event) => {
       const img = new Image();
       img.crossOrigin = "anonymous";
       img.onload = () => {
         state.bgImage = img;
-        state.cachedUserImage = img;
-        state.activePreviewBg = null;
-        if (typeof updatePreviewBgButtonsUI === 'function') updatePreviewBgButtonsUI();
-        getElement('bgStatusBadge').textContent = 'Custom Photo Loaded';
-        getElement('bgStatusBadge').className = 'text-[10px] text-emerald-500 font-mono-avionics font-bold';
+        state.isForceScaled = false;
+        const bgStatusBadge = getElement('bgStatusBadge');
+        if (bgStatusBadge) {
+          bgStatusBadge.textContent = 'Custom Photo Loaded';
+          bgStatusBadge.className = 'text-[10px] text-emerald-500 font-mono-avionics font-bold';
+        }
+        if (state.selectedAirlineKey) {
+          setActiveTab('scenery');
+        }
         renderAll();
       };
       img.src = event.target.result;
@@ -2471,10 +3109,16 @@ export function mountStudio(root) {
   function applyLoadedSceneryImage(img, badgeText) {
     state.bgImage = img;
     state.isForceScaled = false;
-    getElement('bgStatusBadge').textContent = badgeText;
-    getElement('bgStatusBadge').className = 'text-[10px] text-emerald-500 font-mono-avionics font-bold';
+    const bgStatusBadge = getElement('bgStatusBadge');
+    if (bgStatusBadge) {
+      bgStatusBadge.textContent = badgeText;
+      bgStatusBadge.className = 'text-[10px] text-emerald-500 font-mono-avionics font-bold';
+    }
     urlImportStatus.textContent = "Loaded ✓";
     urlImportStatus.className = "text-[9px] text-emerald-400";
+    if (state.selectedAirlineKey) {
+      setActiveTab('scenery');
+    }
     renderAll();
     setTimeout(() => urlImportStatus.classList.add('hidden'), 2500);
   }
@@ -2576,7 +3220,7 @@ export function mountStudio(root) {
 
 
 
-  // Reset Function: Resets Pan/Zoom, unlocks axes, and restores scenery to default scenery
+  // Reset Function: Resets Pan/Zoom, unlocks axes, and centers backdrop back to default values without removing the image
   function resetPanAndZoom() {
     state.bgZoom = 1.0;
     state.bgPanX = 0;
@@ -2593,15 +3237,9 @@ export function mountStudio(root) {
     getElement('panYVal').textContent = '0px';
 
     updateLockUI();
-
-    // Reset uploaded image back to default scenery photo
-    const filePicker = getElement('filePicker');
-    if (filePicker) filePicker.value = "";
-    renderStandbyCanvas();
+    renderAll();
   }
 
-  const btnResetPanZoom = getElement('btnResetPanZoom');
-  if (btnResetPanZoom) btnResetPanZoom.addEventListener('click', resetPanAndZoom, { signal: listeners.signal });
   getElement('btnResetPanZoomInline').addEventListener('click', resetPanAndZoom, { signal: listeners.signal });
 
   getElement('btnFitWidth').addEventListener('click', () => {
@@ -2658,64 +3296,53 @@ export function mountStudio(root) {
     renderAll();
   }, { signal: listeners.signal });
 
-  // 4. Scrims & Grading
+  const formatGradingVal = (val) => {
+    const num = Number(val) || 0;
+    if (num > 0) return `+${num}`;
+    return `${num}`;
+  };
+
+  // 4. Photo Grading
   getElement('bgBright').addEventListener('input', (e) => {
-    state.bgBright = e.target.value;
-    getElement('brightVal').textContent = `${e.target.value}%`;
+    state.bgBright = parseInt(e.target.value, 10) || 0;
+    getElement('brightVal').textContent = formatGradingVal(state.bgBright);
     renderAll();
   }, { signal: listeners.signal });
   getElement('bgContrast').addEventListener('input', (e) => {
-    state.bgContrast = e.target.value;
-    getElement('contrastVal').textContent = `${e.target.value}%`;
-    renderAll();
-  }, { signal: listeners.signal });
-  getElement('botScrim').addEventListener('input', (e) => {
-    state.botScrim = parseInt(e.target.value, 10) || 0;
-    getElement('botScrimVal').textContent = `${e.target.value}%`;
+    state.bgContrast = parseInt(e.target.value, 10) || 0;
+    getElement('contrastVal').textContent = formatGradingVal(state.bgContrast);
     renderAll();
   }, { signal: listeners.signal });
 
-  // Individual & Full Reset Buttons for Photo Grading & Scrim
+  // Individual & Full Reset Buttons for Photo Grading
   getElement('btnResetBright').addEventListener('click', () => {
-    state.bgBright = 100;
-    getElement('bgBright').value = 100;
-    getElement('brightVal').textContent = '100%';
+    state.bgBright = 0;
+    getElement('bgBright').value = 0;
+    getElement('brightVal').textContent = '0';
     renderAll();
   }, { signal: listeners.signal });
 
   getElement('btnResetContrast').addEventListener('click', () => {
-    state.bgContrast = 105;
-    getElement('bgContrast').value = 105;
-    getElement('contrastVal').textContent = '105%';
-    renderAll();
-  }, { signal: listeners.signal });
-
-  getElement('btnResetScrim').addEventListener('click', () => {
-    state.botScrim = 45;
-    getElement('botScrim').value = 45;
-    getElement('botScrimVal').textContent = '45%';
+    state.bgContrast = 0;
+    getElement('bgContrast').value = 0;
+    getElement('contrastVal').textContent = '0';
     renderAll();
   }, { signal: listeners.signal });
 
   function resetAllGrading() {
-    state.bgBright = 100;
-    state.bgContrast = 105;
-    state.botScrim = 45;
+    state.bgBright = 0;
+    state.bgContrast = 0;
 
-    getElement('bgBright').value = 100;
-    getElement('bgContrast').value = 105;
-    getElement('botScrim').value = 45;
+    getElement('bgBright').value = 0;
+    getElement('bgContrast').value = 0;
 
-    getElement('brightVal').textContent = '100%';
-    getElement('contrastVal').textContent = '105%';
-    getElement('botScrimVal').textContent = '45%';
+    getElement('brightVal').textContent = '0';
+    getElement('contrastVal').textContent = '0';
 
     renderAll();
   }
 
   getElement('btnResetGradingAll').addEventListener('click', resetAllGrading, { signal: listeners.signal });
-  const btnResetGradingHeaderLink = getElement('btnResetGradingHeaderLink');
-  if (btnResetGradingHeaderLink) btnResetGradingHeaderLink.addEventListener('click', resetAllGrading, { signal: listeners.signal });
 
   // 5. Text Bindings (Centered City Under ICAO, No Separator Line)
   // ICAO Airport Input & Instant 4-Letter Auto-Fill
@@ -2816,7 +3443,6 @@ export function mountStudio(root) {
   const btnLegibilitySoft = getElement('btnLegibilitySoft');
   const legibilityIntensity = getElement('legibilityIntensity');
   const legibilityIntensityVal = getElement('legibilityIntensityVal');
-  const legibilityStyleRow = getElement('legibilityStyleRow');
   const legibilityIntensityRow = getElement('legibilityIntensityRow');
 
   // Toggleable Legibility Modes (Clicking an active mode turns it off)
@@ -2866,6 +3492,18 @@ export function mountStudio(root) {
       }
     });
 
+    const toggleBtn = getElement('btnToggleLegibilityEffect');
+    const toggleLabel = getElement('legibilityToggleLabel');
+    if (toggleBtn) {
+      const toggleActiveClass = isDark
+        ? "py-1 px-2 rounded-md bg-white/20 text-white border border-white/40 text-center font-bold transition shadow-sm"
+        : "py-1 px-2 rounded-md bg-black/10 text-black border border-black/30 text-center font-bold transition shadow-sm";
+      toggleBtn.className = isEffectOn ? toggleActiveClass : "py-1 px-2 tool-btn text-center font-medium transition text-slate-400";
+    }
+    if (toggleLabel) {
+      toggleLabel.textContent = isEffectOn ? "Effect Enabled" : "Effect Disabled";
+    }
+
     if (isEffectOn) {
       legibilityIntensityRow.classList.remove('opacity-40', 'pointer-events-none');
     } else {
@@ -2878,86 +3516,6 @@ export function mountStudio(root) {
   btnLegibilityLight.addEventListener('click', () => toggleLegibilityMode('light'), { signal: listeners.signal });
   btnLegibilityOutline.addEventListener('click', () => toggleLegibilityMode('outline'), { signal: listeners.signal });
   btnLegibilitySoft.addEventListener('click', () => toggleLegibilityMode('soft'), { signal: listeners.signal });
-
-  // --- TEST BACKGROUND PREVIEW CONTROLS (LIGHT SCENERY & DARK SCENERY) ---
-  const btnPreviewLightBg = getElement('btnPreviewLightBg');
-  const btnPreviewDarkBg = getElement('btnPreviewDarkBg');
-  const previewBgStatus = getElement('previewBgStatus');
-
-  let syntheticLightImg = null;
-  let syntheticDarkImg = null;
-
-  function updatePreviewBgButtonsUI() {
-    const isDark = document.body.classList.contains('theme-dark');
-    if (state.activePreviewBg === 'light') {
-      btnPreviewLightBg.className = "py-1 px-2 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center justify-center gap-1 font-bold transition shadow-sm";
-      btnPreviewDarkBg.className = "py-1 px-2 tool-btn flex items-center justify-center gap-1 font-medium transition";
-      previewBgStatus.textContent = "Light Preview ON";
-      previewBgStatus.className = "text-[9px] text-amber-400 font-mono-avionics font-bold";
-      previewBgStatus.classList.remove('hidden');
-    } else if (state.activePreviewBg === 'dark') {
-      const darkActiveBtnClass = isDark
-        ? "py-1 px-2 rounded-md bg-white/20 text-white border border-white/40 flex items-center justify-center gap-1 font-bold transition shadow-sm"
-        : "py-1 px-2 rounded-md bg-black/10 text-black border border-black/30 flex items-center justify-center gap-1 font-bold transition shadow-sm";
-      btnPreviewDarkBg.className = darkActiveBtnClass;
-      btnPreviewLightBg.className = "py-1 px-2 tool-btn flex items-center justify-center gap-1 font-medium transition";
-      previewBgStatus.textContent = "Dark Preview ON";
-      previewBgStatus.className = isDark ? "text-[9px] text-white font-mono-avionics font-bold" : "text-[9px] text-black font-mono-avionics font-bold";
-      previewBgStatus.classList.remove('hidden');
-    } else {
-      btnPreviewLightBg.className = "py-1 px-2 tool-btn flex items-center justify-center gap-1 font-medium transition";
-      btnPreviewDarkBg.className = "py-1 px-2 tool-btn flex items-center justify-center gap-1 font-medium transition";
-      previewBgStatus.classList.add('hidden');
-    }
-  }
-
-  btnPreviewLightBg.addEventListener('click', () => {
-    if (state.activePreviewBg === 'light') {
-      // Toggle OFF: Restore previous user/default image
-      state.activePreviewBg = null;
-      if (state.cachedUserImage) {
-        state.bgImage = state.cachedUserImage;
-      } else {
-        renderStandbyCanvas();
-      }
-    } else {
-      // Toggle ON: Cache current image if not previewing, then set light image
-      if (!state.activePreviewBg && state.bgImage) {
-        state.cachedUserImage = state.bgImage;
-      }
-      state.activePreviewBg = 'light';
-      if (!syntheticLightImg) {
-        syntheticLightImg = createSyntheticLightBgImage();
-      }
-      state.bgImage = syntheticLightImg;
-    }
-    updatePreviewBgButtonsUI();
-    renderAll();
-  }, { signal: listeners.signal });
-
-  btnPreviewDarkBg.addEventListener('click', () => {
-    if (state.activePreviewBg === 'dark') {
-      // Toggle OFF: Restore previous user/default image
-      state.activePreviewBg = null;
-      if (state.cachedUserImage) {
-        state.bgImage = state.cachedUserImage;
-      } else {
-        renderStandbyCanvas();
-      }
-    } else {
-      // Toggle ON: Cache current image if not previewing, then set dark image
-      if (!state.activePreviewBg && state.bgImage) {
-        state.cachedUserImage = state.bgImage;
-      }
-      state.activePreviewBg = 'dark';
-      if (!syntheticDarkImg) {
-        syntheticDarkImg = createSyntheticDarkBgImage();
-      }
-      state.bgImage = syntheticDarkImg;
-    }
-    updatePreviewBgButtonsUI();
-    renderAll();
-  }, { signal: listeners.signal });
 
   legibilityIntensity.addEventListener('input', (e) => {
     state.airport.legibilityIntensity = parseInt(e.target.value, 10);
@@ -3007,6 +3565,9 @@ export function mountStudio(root) {
     updateLegibilityButtonsUI();
     renderAll();
   }, { signal: listeners.signal });
+
+  // Initial call to sync legibility controls on attach
+  updateLegibilityButtonsUI();
 
   // Preset buttons
   root.querySelectorAll('.preset-btn').forEach(btn => {
@@ -3065,8 +3626,11 @@ export function mountStudio(root) {
     if (typeof setActiveTab === 'function') {
       setActiveTab(activeTabId);
     }
-    if (typeof setHeaderMode === 'function') {
-      setHeaderMode(state.headerMode || 'logo');
+    if (typeof setLogoVariant === 'function') {
+      setLogoVariant(state.logoVariant || 'dark', false);
+    }
+    if (typeof updateControlLocksUI === 'function') {
+      updateControlLocksUI();
     }
     if (typeof updateHdrButtonsUI === 'function') {
       updateHdrButtonsUI();
@@ -3086,37 +3650,6 @@ export function mountStudio(root) {
     const isDark = document.body.classList.contains('theme-dark');
     applyTheme(isDark ? 'light' : 'dark');
   }, { signal: listeners.signal });
-
-  // 7. Viewport Zoom Buttons (guarded)
-  const btnZoomIn = getElement('btnZoomIn');
-  if (btnZoomIn) {
-    btnZoomIn.addEventListener('click', () => {
-      state.viewportZoom = Math.min(2.5, state.viewportZoom + 0.15);
-      renderAll();
-    }, { signal: listeners.signal });
-  }
-  const btnZoomOut = getElement('btnZoomOut');
-  if (btnZoomOut) {
-    btnZoomOut.addEventListener('click', () => {
-      state.viewportZoom = Math.max(0.4, state.viewportZoom - 0.15);
-      renderAll();
-    }, { signal: listeners.signal });
-  }
-  const btnResetView = getElement('btnResetView');
-  if (btnResetView) {
-    btnResetView.addEventListener('click', () => {
-      state.viewportZoom = 1.0;
-      renderAll();
-    }, { signal: listeners.signal });
-  }
-
-  // Header Refresh Page Button
-  const btnRefreshPage = getElement('btnRefreshPage');
-  if (btnRefreshPage) {
-    btnRefreshPage.addEventListener('click', () => {
-      window.location.reload();
-    }, { signal: listeners.signal });
-  }
 
   // --- FUNNY AVIATION TAGLINES ---
   const AVIATION_TAGLINES = [
@@ -3195,8 +3728,6 @@ export function mountStudio(root) {
 
   // Single Primary Export Button in Header
   getElement('btnTopExport').addEventListener('click', handleSingleExport, { signal: listeners.signal });
-  const btnBottomExport = getElement('btnBottomExport');
-  if (btnBottomExport) btnBottomExport.addEventListener('click', handleSingleExport, { signal: listeners.signal });
 
   window.addEventListener('resize', renderAll, { signal: listeners.signal });
 
@@ -3229,9 +3760,15 @@ export function mountStudio(root) {
     records.forEach(rec => {
       airlineProfiles[rec.code] = {
         name: rec.name,
+        code: rec.code,
         suffix: rec.suffix || "Focus Airport",
         brandColor: rec.brandColor || "#002b49",
-        defaultLogoHeight: rec.defaultLogoHeight || 160,
+        defaultLogoHeight: rec.defaultLogoHeight || UNIFORM_HEADER_SIZE,
+        defaultLogoOffsetX: rec.defaultLogoOffsetX || 0,
+        defaultLogoOffsetY: rec.defaultLogoOffsetY || 0,
+        defaultSuffixOffsetX: rec.defaultSuffixOffsetX || 0,
+        defaultSuffixSize: rec.defaultSuffixSize || rec.defaultLogoHeight || UNIFORM_HEADER_SIZE,
+        defaultHeaderX: rec.defaultHeaderX || DEFAULT_HEADER_X,
         fontCss: "italic 800 {size}px 'Barlow', sans-serif",
         letterSpacing: "2px",
         isCustomUserAirline: true
@@ -3241,19 +3778,13 @@ export function mountStudio(root) {
     // Preserve currently selected key
     const currentSelected = state.selectedAirlineKey;
 
-    // 2. Remove any previously created custom optgroup or custom options
-    const oldGroup = getElement('customAirlinesOptGroup');
-    if (oldGroup) oldGroup.remove();
-
-    // 3. Gather all airline entries to populate in the dropdown.
-    // Built-in profiles: ANZ, CPA, FDX, FFT, ICE, JBU, QFA, UAL.
-    // Custom user added profiles from storage.
+    // 2. Gather all airline entries to populate in the dropdown.
+    // Profiles loaded from API + custom user added profiles from storage.
     // "CUSTOM" (generic custom blank slate) is kept at the very end of the list.
-    const standardKeys = ["ANZ", "CPA", "FDX", "FFT", "ICE", "JBU", "QFA", "UAL"];
     const allEntries = [];
 
-    standardKeys.forEach(k => {
-      if (airlineProfiles[k]) {
+    Object.keys(airlineProfiles).forEach(k => {
+      if (k !== 'CUSTOM' && !records.some(r => r.code === k)) {
         allEntries.push({ key: k, name: airlineProfiles[k].name });
       }
     });
@@ -3284,6 +3815,15 @@ export function mountStudio(root) {
       dropdown.appendChild(placeholderOpt);
     }
 
+    if (allEntries.length === 0) {
+      const loadingOpt = document.createElement('option');
+      loadingOpt.id = 'optAirlineLoading';
+      loadingOpt.value = "";
+      loadingOpt.textContent = "Loading airlines from API...";
+      loadingOpt.disabled = true;
+      dropdown.appendChild(loadingOpt);
+    }
+
     // Append all airlines in a single unified alphabetical list with code in parentheses: Name (CODE)
     allEntries.forEach(item => {
       const opt = document.createElement('option');
@@ -3292,279 +3832,153 @@ export function mountStudio(root) {
       dropdown.appendChild(opt);
     });
 
-    // Append generic "Custom" blank slate profile at bottom
-    const genericCustomOpt = document.createElement('option');
-    genericCustomOpt.value = "CUSTOM";
-    genericCustomOpt.textContent = "Custom";
-    dropdown.appendChild(genericCustomOpt);
+    // AUDIT NOTE: The "Custom" airline profile ("CUSTOM") is intentionally kept in the codebase
+    // but is temporarily disabled and removed from the active dropdown list.
+    // Retain this feature and its supporting logic during code audits for future re-enablement.
+    // (Name retained: "Custom", state: disabled/hidden).
 
     // Restore dropdown selection if valid
-    if (currentSelected && (airlineProfiles[currentSelected] || currentSelected === 'CUSTOM')) {
+    if (currentSelected && currentSelected !== 'CUSTOM' && (airlineProfiles[currentSelected])) {
       dropdown.value = currentSelected;
     }
-
-    // 4. Update the management list inside modal
-    renderCustomAirlinesModalList();
   }
 
-  function renderCustomAirlinesModalList() {
-    const records = loadCustomAirlineRecords();
-    const listContainer = getElement('customAirlinesList');
-    const countLabel = getElement('customAirlinesCount');
-    if (!listContainer || !countLabel) return;
 
-    countLabel.textContent = `${records.length} added`;
+  // --- REFRESH AIRLINES API DATA HANDLER ---
+  let apiErrorNoticeTimeout = null;
 
-    if (records.length === 0) {
-      listContainer.innerHTML = `
-        <div id="emptyCustomAirlinesMsg" class="py-6 text-center text-xs text-zinc-500 font-mono-avionics border border-zinc-800/60 rounded-xl bg-slate-950/40">
-          No custom airlines added yet. Create one above!
-        </div>
-      `;
-      return;
+  async function refreshApiAirlinesData() {
+    const btn = getElement('btnRefreshApiData');
+    const icon = getElement('refreshApiIcon');
+    const label = getElement('refreshApiLabel');
+    const errorNotice = getElement('apiErrorNotice');
+    const errorMsg = getElement('apiErrorMessage');
+
+    if (errorNotice) errorNotice.classList.add('hidden');
+    if (btn) {
+      btn.classList.remove('flash-success-3', 'flash-error-3');
+      btn.disabled = true;
     }
+    if (icon) icon.classList.add('animate-spin');
+    if (label) label.textContent = 'Refreshing...';
 
-    listContainer.innerHTML = "";
-    // Sort custom airline records alphabetically by name (skipping leading 'v')
-    const sortedRecords = [...records].sort((a, b) => {
-      return getAirlineSortKey(a.name).localeCompare(getAirlineSortKey(b.name));
-    });
+    try {
+      const AIRLINES_API_URL = import.meta.env.VITE_AIRLINES_API_URL || 'https://app.airwaylink.org/api/airlines';
+      const res = await fetch(`${AIRLINES_API_URL}?t=${Date.now()}`, { cache: 'no-cache' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+      const apiData = await res.json();
 
-    sortedRecords.forEach(rec => {
-      const item = document.createElement('div');
-      item.className = "modal-item p-2.5 rounded-lg border flex items-center justify-between gap-3 transition shadow-sm";
+      if (Array.isArray(apiData) && apiData.length > 0) {
+        try {
+          localStorage.setItem('airwaylink_api_airlines', JSON.stringify(apiData));
+        } catch (e) {}
 
-      const hasLogo = !!state.customLogoOverrides[rec.code];
-      const logoPreviewHtml = hasLogo 
-        ? `<img src="${state.customLogoOverrides[rec.code].src}" class="max-h-full max-w-full object-contain">`
-        : `<span class="text-[9px] font-mono-avionics font-bold modal-muted">${rec.code}</span>`;
+        registerApiAirlines(apiData);
+        syncCustomAirlinesToUI();
 
-      item.innerHTML = `
-        <div class="flex items-center gap-2.5 min-w-0">
-          <div class="w-8 h-8 rounded border border-inherit bg-black/10 dark:bg-black/40 flex items-center justify-center p-0.5 shrink-0 overflow-hidden" style="border-top: 2px solid ${rec.brandColor}">
-            ${logoPreviewHtml}
-          </div>
-          <div class="min-w-0">
-            <div class="flex items-center gap-1.5">
-              <span class="text-xs font-bold modal-title font-hud truncate">${rec.name}</span>
-              <span class="text-[9px] font-mono-avionics px-1.5 py-0.5 rounded modal-badge font-bold shrink-0">${rec.code}</span>
-            </div>
-            <div class="flex items-center gap-2 text-[10px] modal-muted font-mono-avionics">
-              <span class="flex items-center gap-1">
-                <span class="w-2 h-2 rounded-full inline-block" style="background-color: ${rec.brandColor}"></span>
-                ${rec.brandColor.toUpperCase()}
-              </span>
-              <span>•</span>
-              <span>${rec.suffix}</span>
-            </div>
-          </div>
-        </div>
-        <div class="flex items-center gap-1.5 shrink-0">
-          <button type="button" data-select-airline="${rec.code}" title="Apply to Workspace" class="py-1 px-2.5 text-[10px] font-mono-avionics font-bold rounded tool-btn transition">
-            Use
-          </button>
-          <button type="button" data-delete-airline="${rec.code}" title="Delete Airline Profile" class="p-1 modal-muted hover:text-rose-500 rounded transition">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-          </button>
-        </div>
-      `;
-
-      // Event: "Use" button immediately selects and applies airline
-      item.querySelector(`[data-select-airline="${rec.code}"]`).addEventListener('click', () => {
-        getElement('airlineDropdown').value = rec.code;
-        setAirline(rec.code);
-        renderAll();
-        getElement('airlineModal').classList.add('hidden');
-      }, { signal: listeners.signal });
-
-      // Event: Delete button removes profile and persistence
-      item.querySelector(`[data-delete-airline="${rec.code}"]`).addEventListener('click', async () => {
-        if (!confirm(`Delete custom airline profile "${rec.name}" (${rec.code})?`)) return;
-
-        let currentRecords = loadCustomAirlineRecords();
-        currentRecords = currentRecords.filter(r => r.code !== rec.code);
-        saveCustomAirlineRecords(currentRecords);
-
-        delete airlineProfiles[rec.code];
-        delete state.customLogoOverrides[rec.code];
-        await removeLogoFromStorage(rec.code);
-
-        // If currently selected, clear selection or switch to NONE
-        if (state.selectedAirlineKey === rec.code) {
-          setAirline('');
-          const dd = getElement('airlineDropdown');
-          if (dd) dd.value = '';
+        if (state.selectedAirlineKey) {
+          preloadAirline(state.selectedAirlineKey);
+          updateSidebarLogoPreview();
+          renderAll();
         }
 
-        syncCustomAirlinesToUI();
-        renderAll();
-      }, { signal: listeners.signal });
+        // Good connection: Flash button green 3 times
+        if (btn) {
+          btn.classList.remove('flash-success-3', 'flash-error-3');
+          void btn.offsetWidth; // Force CSS reflow to re-trigger keyframe animation
+          btn.classList.add('flash-success-3');
+          setTimeout(() => {
+            if (btn) btn.classList.remove('flash-success-3');
+          }, 1300);
+        }
 
-      listContainer.appendChild(item);
-    });
-  }
+        if (label) {
+          label.textContent = 'Updated!';
+          setTimeout(() => {
+            if (label) label.textContent = 'Refresh';
+          }, 1800);
+        }
+      } else {
+        throw new Error('API returned empty or invalid airline list');
+      }
+    } catch (err) {
+      console.warn("Could not refresh airlines from API:", err);
 
-  // Modal Opening & Closing Events
-  const btnOpenAirlineModal = getElement('btnOpenAirlineModal');
-  const airlineModal = getElement('airlineModal');
-  const btnCloseAirlineModal = getElement('btnCloseAirlineModal');
-  const btnDoneAirlineModal = getElement('btnDoneAirlineModal');
+      // No connection / error: Flash button red 3 times and display pop-up notice
+      if (btn) {
+        btn.classList.remove('flash-success-3', 'flash-error-3');
+        void btn.offsetWidth; // Force CSS reflow to re-trigger keyframe animation
+        btn.classList.add('flash-error-3');
+        setTimeout(() => {
+          if (btn) btn.classList.remove('flash-error-3');
+        }, 1300);
+      }
 
-  if (btnOpenAirlineModal && airlineModal) {
-    btnOpenAirlineModal.addEventListener('click', () => {
-      renderCustomAirlinesModalList();
-      airlineModal.classList.remove('hidden');
-    }, { signal: listeners.signal });
-  }
+      if (errorNotice) {
+        if (errorMsg) {
+          errorMsg.textContent = !navigator.onLine
+            ? 'No internet connection detected. Please verify your network and try again.'
+            : `Unable to reach Airlines API server (${err.message || 'Connection failed'}). Please try again shortly.`;
+        }
+        errorNotice.classList.remove('hidden');
 
-  [btnCloseAirlineModal, btnDoneAirlineModal].forEach(btn => {
-    if (btn && airlineModal) {
-      btn.addEventListener('click', () => {
-        airlineModal.classList.add('hidden');
-      }, { signal: listeners.signal });
+        clearTimeout(apiErrorNoticeTimeout);
+        apiErrorNoticeTimeout = setTimeout(() => {
+          if (errorNotice) errorNotice.classList.add('hidden');
+        }, 6000);
+      }
+
+      if (label) {
+        label.textContent = 'Failed';
+        setTimeout(() => {
+          if (label) label.textContent = 'Refresh';
+        }, 1800);
+      }
+    } finally {
+      if (icon) icon.classList.remove('animate-spin');
+      if (btn) btn.disabled = false;
     }
-  });
+  }
 
-  // Color picker synchronization for Add Airline Form
-  const inputNewAirlineColor = getElement('inputNewAirlineColor');
-  const inputNewAirlineColorHex = getElement('inputNewAirlineColorHex');
-  if (inputNewAirlineColor && inputNewAirlineColorHex) {
-    inputNewAirlineColor.addEventListener('input', (e) => {
-      inputNewAirlineColorHex.value = e.target.value.toUpperCase();
-    }, { signal: listeners.signal });
-    inputNewAirlineColorHex.addEventListener('input', (e) => {
-      let val = e.target.value;
-      if (!val.startsWith('#')) val = '#' + val;
-      if (/^#[0-9A-Fa-f]{6}$/.test(val)) {
-        inputNewAirlineColor.value = val;
-      }
+  const btnRefreshApiData = getElement('btnRefreshApiData');
+  if (btnRefreshApiData) {
+    btnRefreshApiData.addEventListener('click', () => {
+      refreshApiAirlinesData();
     }, { signal: listeners.signal });
   }
 
-  // Height slider sync for Add Airline Form
-  const rangeNewAirlineHeight = getElement('rangeNewAirlineHeight');
-  const labelNewAirlineHeight = getElement('labelNewAirlineHeight');
-  if (rangeNewAirlineHeight && labelNewAirlineHeight) {
-    rangeNewAirlineHeight.addEventListener('input', (e) => {
-      labelNewAirlineHeight.textContent = `${e.target.value}px`;
+  const btnCloseApiError = getElement('btnCloseApiError');
+  if (btnCloseApiError) {
+    btnCloseApiError.addEventListener('click', () => {
+      const errorNotice = getElement('apiErrorNotice');
+      if (errorNotice) errorNotice.classList.add('hidden');
     }, { signal: listeners.signal });
   }
 
-  // Logo image picker & preview for Add Airline Form
-  let pendingNewAirlineLogoDataUrl = null;
-  const inputNewAirlineLogo = getElement('inputNewAirlineLogo');
-  const labelNewAirlineLogoFile = getElement('labelNewAirlineLogoFile');
-  const previewNewAirlineLogoContainer = getElement('previewNewAirlineLogoContainer');
-  const imgNewAirlineLogoPreview = getElement('imgNewAirlineLogoPreview');
-
-  if (inputNewAirlineLogo) {
-    inputNewAirlineLogo.addEventListener('change', (e) => {
-      const file = e.target.files && e.target.files[0];
-      if (!file) return;
-
-      labelNewAirlineLogoFile.textContent = file.name;
-      const reader = new FileReader();
-      reader.onload = (loadEvt) => {
-        const rawDataUrl = loadEvt.target.result;
-        const tempImg = new Image();
-        tempImg.onload = () => {
-          const trimmed = trimTransparentImage(tempImg);
-          pendingNewAirlineLogoDataUrl = trimmed.src;
-          imgNewAirlineLogoPreview.src = trimmed.src;
-          previewNewAirlineLogoContainer.classList.remove('hidden');
-        };
-        tempImg.src = rawDataUrl;
-      };
-      reader.readAsDataURL(file);
-    }, { signal: listeners.signal });
-  }
-
-  // Save New Airline Button Handler
-  const btnSaveNewAirline = getElement('btnSaveNewAirline');
-  const msgNewAirlineError = getElement('msgNewAirlineError');
-
-  if (btnSaveNewAirline) {
-    btnSaveNewAirline.addEventListener('click', async () => {
-      msgNewAirlineError.classList.add('hidden');
-      msgNewAirlineError.textContent = "";
-
-      const rawCode = (getElement('inputNewAirlineCode').value || "").trim().toUpperCase();
-      const rawName = (getElement('inputNewAirlineName').value || "").trim();
-      const rawSuffix = (getElement('inputNewAirlineSuffix').value || "Focus Airport").trim();
-      let rawColor = (getElement('inputNewAirlineColorHex').value || "#002B49").trim();
-      if (!rawColor.startsWith('#')) rawColor = '#' + rawColor;
-      const rawHeight = parseInt(getElement('rangeNewAirlineHeight').value, 10) || 160;
-
-      // Validation
-      if (!rawCode || rawCode.length < 2) {
-        msgNewAirlineError.textContent = "Please provide an airline code (e.g. DLH, BAW, SWA).";
-        msgNewAirlineError.classList.remove('hidden');
-        return;
+  document.addEventListener('click', (e) => {
+    const errorNotice = getElement('apiErrorNotice');
+    const container = getElement('refreshApiContainer');
+    if (errorNotice && !errorNotice.classList.contains('hidden')) {
+      if (container && !container.contains(e.target)) {
+        errorNotice.classList.add('hidden');
       }
-      if (!rawName) {
-        msgNewAirlineError.textContent = "Please provide the full airline display name.";
-        msgNewAirlineError.classList.remove('hidden');
-        return;
-      }
-
-      // Avoid duplicate codes with built-ins or existing
-      const existingBuiltIns = ["ANZ", "CPA", "FDX", "FFT", "ICE", "JBU", "QFA", "UAL", "CUSTOM"];
-      const existingRecords = loadCustomAirlineRecords();
-      if (existingBuiltIns.includes(rawCode) || existingRecords.some(r => r.code === rawCode)) {
-        msgNewAirlineError.textContent = `Airline code "${rawCode}" already exists. Please choose a different code.`;
-        msgNewAirlineError.classList.remove('hidden');
-        return;
-      }
-
-      const newRecord = {
-        code: rawCode,
-        name: rawName,
-        suffix: rawSuffix || "Focus Airport",
-        brandColor: rawColor,
-        defaultLogoHeight: rawHeight
-      };
-
-      // Save logo if provided
-      if (pendingNewAirlineLogoDataUrl) {
-        await saveLogoToStorage(rawCode, pendingNewAirlineLogoDataUrl);
-        const img = new Image();
-        img.src = pendingNewAirlineLogoDataUrl;
-        state.customLogoOverrides[rawCode] = img;
-      }
-
-      existingRecords.push(newRecord);
-      saveCustomAirlineRecords(existingRecords);
-
-      // Reset form fields
-      getElement('inputNewAirlineCode').value = "";
-      getElement('inputNewAirlineName').value = "";
-      getElement('inputNewAirlineSuffix').value = "Focus Airport";
-      getElement('inputNewAirlineLogo').value = "";
-      labelNewAirlineLogoFile.textContent = "Choose logo image...";
-      previewNewAirlineLogoContainer.classList.add('hidden');
-      imgNewAirlineLogoPreview.removeAttribute('src');
-      pendingNewAirlineLogoDataUrl = null;
-
-      // Update UI and immediately switch to newly created airline
-      syncCustomAirlinesToUI();
-      getElement('airlineDropdown').value = rawCode;
-      setAirline(rawCode);
-      renderAll();
-
-      // Close modal
-      airlineModal.classList.add('hidden');
-    }, { signal: listeners.signal });
-  }
+    }
+  }, { signal: listeners.signal });
 
   applyTheme(localStorage.getItem('airwaylink_theme') || 'dark');
+  updateControlLocksUI();
   updateExportButtonState();
+  updateTabAvailabilityUI();
   cycleTagline();
   syncCustomAirlinesToUI();
   renderStandbyCanvas();
   renderAll();
 
-  preloadEmbeddedLogos().then(() => {
-    if (!listeners.signal.aborted) renderAll();
+  loadAirlinesFromAPI().then(() => {
+    if (!listeners.signal.aborted) {
+      syncCustomAirlinesToUI();
+      renderAll();
+    }
   });
 
   return () => listeners.abort();

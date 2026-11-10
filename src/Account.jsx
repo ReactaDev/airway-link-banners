@@ -46,7 +46,7 @@ export function Account() {
         </span>
       </button>
 
-      <div id="auth0Dropdown" className={`${open ? '' : 'hidden '}absolute right-0 mt-2 w-72 rounded-xl border shadow-2xl p-4 z-50 transition-all font-sans text-xs`}>
+      <div id="auth0Dropdown" className={`${open ? '' : 'hidden '}absolute left-1/2 -translate-x-1/2 mt-2 w-72 rounded-xl border shadow-2xl p-4 z-50 transition-all font-sans text-xs`}>
         {profile && (
           <div id="auth0UserInfo" className="flex flex-col gap-2 pb-3 border-b mb-3">
             <div className="flex items-center gap-3">
@@ -57,7 +57,7 @@ export function Account() {
               </div>
             </div>
             <div className="flex items-center justify-between text-[11px] text-emerald-500 font-mono-avionics mt-1">
-              <span>â— Authenticated via Auth0</span>
+              <span>● Authenticated via Auth0</span>
             </div>
           </div>
         )}

@@ -26,100 +26,7 @@ body {
 .font-syne { font-family: 'Syne', sans-serif; }
 
 /* ========================================================
-   MODERN REFINED COLOR THEMES: DARK & LIGHT
-   ======================================================== */
-
-/* Modern Custom Range Sliders */
-input[type=range] {
-  -webkit-appearance: none;
-  appearance: none;
-  border-radius: 9999px;
-  height: 5px;
-  outline: none;
-  transition: background 0.15s ease;
-}
-.theme-dark input[type=range] {
-  background: #27272a;
-}
-.theme-dark input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  height: 16px;
-  width: 16px;
-  border-radius: 50%;
-  background: #ffffff;
-  border: 2px solid #ffffff;
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
-  transition: transform 0.1s ease, background-color 0.15s ease;
-}
-.theme-dark input[type=range]::-webkit-slider-thumb:hover {
-  transform: scale(1.15);
-  background: #f4f4f5;
-}
-.theme-dark input[type=range]::-moz-range-thumb {
-  height: 16px;
-  width: 16px;
-  border-radius: 50%;
-  background: #ffffff;
-  border: 2px solid #ffffff;
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
-}
-
-.theme-light input[type=range] {
-  background: #e2e8f0;
-}
-.theme-light input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  height: 16px;
-  width: 16px;
-  border-radius: 50%;
-  background: #0284c7;
-  border: 2px solid #ffffff;
-  cursor: pointer;
-  box-shadow: 0 2px 5px rgba(2, 132, 199, 0.35);
-  transition: transform 0.1s ease, background-color 0.15s ease;
-}
-.theme-light input[type=range]::-webkit-slider-thumb:hover {
-  transform: scale(1.15);
-  background: #0369a1;
-}
-.theme-light input[type=range]::-moz-range-thumb {
-  height: 16px;
-  width: 16px;
-  border-radius: 50%;
-  background: #0284c7;
-  border: 2px solid #ffffff;
-  cursor: pointer;
-  box-shadow: 0 2px 5px rgba(2, 132, 199, 0.35);
-}
-
-/* Scrollbars */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
-::-webkit-scrollbar-corner { background: transparent; }
-.theme-dark ::-webkit-scrollbar-track { background: #000000; }
-.theme-dark ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 9999px; }
-.theme-dark ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
-
-.theme-light ::-webkit-scrollbar-track { background: #f1f5f9; }
-.theme-light ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
-.theme-light ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-
-/* Viewport Clean Grid Pattern */
-.hud-grid-pattern { background-size: 28px 28px; }
-.theme-dark .hud-grid-pattern {
-  background-image: none !important;
-}
-.theme-light .hud-grid-pattern {
-  background-image: 
-    radial-gradient(circle, rgba(14, 165, 233, 0.16) 1px, transparent 1px);
-}
-
-/* ========================================================
-   WINDOWS 11 FLUENT DESIGN SYSTEM (DARK & LIGHT)
+   AIRWAYLINK DASHBOARD DESIGN SYSTEM (DARK & LIGHT)
    ======================================================== */
 
 /* Modern Custom Range Sliders */
@@ -132,74 +39,74 @@ input[type=range] {
   transition: background 0.15s ease;
 }
 .theme-dark input[type=range] {
-  background: rgba(255, 255, 255, 0.25);
+  background: #28282e;
 }
 .theme-dark input[type=range]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  height: 16px;
-  width: 16px;
+  height: 15px;
+  width: 15px;
   border-radius: 50%;
-  background: #ffffff;
+  background: #ededf0;
   border: none;
   cursor: pointer;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
   transition: transform 0.1s ease, background-color 0.15s ease;
 }
 .theme-dark input[type=range]::-webkit-slider-thumb:hover {
   transform: scale(1.15);
-  background: #f0f0f0;
+  background: #ffffff;
 }
 .theme-dark input[type=range]::-moz-range-thumb {
-  height: 16px;
-  width: 16px;
+  height: 15px;
+  width: 15px;
   border-radius: 50%;
-  background: #ffffff;
+  background: #ededf0;
   border: none;
   cursor: pointer;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .theme-light input[type=range] {
-  background: rgba(0, 0, 0, 0.15);
+  background: #e4e4e7;
 }
 .theme-light input[type=range]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  height: 16px;
-  width: 16px;
+  height: 15px;
+  width: 15px;
   border-radius: 50%;
-  background: #000000;
+  background: #18181b;
   border: none;
   cursor: pointer;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   transition: transform 0.1s ease, background-color 0.15s ease;
 }
 .theme-light input[type=range]::-webkit-slider-thumb:hover {
   transform: scale(1.15);
-  background: #222222;
+  background: #000000;
 }
 .theme-light input[type=range]::-moz-range-thumb {
-  height: 16px;
-  width: 16px;
+  height: 15px;
+  width: 15px;
   border-radius: 50%;
-  background: #000000;
+  background: #18181b;
   border: none;
   cursor: pointer;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
-/* Scrollbars (Win11 Minimal Overlay Style, No Buttons/Indicators) */
+/* Scrollbars (Airwaylink Dashboard Minimal Overlay) */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
 ::-webkit-scrollbar-corner { background: transparent; }
 .theme-dark ::-webkit-scrollbar-track { background: transparent; }
-.theme-dark ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 9999px; }
-.theme-dark ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.35); }
+.theme-dark ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 9999px; }
+.theme-dark ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.28); }
 
 .theme-light ::-webkit-scrollbar-track { background: transparent; }
-.theme-light ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.2); border-radius: 9999px; }
-.theme-light ::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.35); }
+.theme-light ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.15); border-radius: 9999px; }
+.theme-light ::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.28); }
 
 /* Viewport Clean Grid Pattern */
 .hud-grid-pattern { background-size: 28px 28px; }
@@ -208,372 +115,661 @@ input[type=range] {
 }
 .theme-light .hud-grid-pattern {
   background-image: 
-    radial-gradient(circle, rgba(0, 95, 184, 0.12) 1px, transparent 1px);
+    radial-gradient(circle, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
 }
 
-/* Windows 11 Dark Mode (Mica Alt & Acrylic) */
+/* ========================================================
+   AIRWAYLINK DASHBOARD DARK THEME
+   ======================================================== */
 body.theme-dark {
-  background-color: #202020;
-  color: #ffffff;
+  background-color: #141416;
+  color: #ededf0;
 }
+
 body.theme-dark header, body.theme-dark footer {
-  background-color: rgba(32, 32, 32, 0.85);
-  border-color: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(30px);
+  background-color: rgba(17, 17, 19, 0.95);
+  border-color: #232327;
+  backdrop-filter: blur(20px);
 }
+
+body.theme-dark .header-logo {
+  filter: invert(1);
+}
+
 body.theme-dark aside {
-  background-color: #202020;
-  border-color: rgba(255, 255, 255, 0.08);
+  background-color: #141416;
+  border-color: #232327;
 }
+
 body.theme-dark .panel-card {
-  background-color: #2b2b2b;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 8px;
-  color: #ffffff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.28);
+  background-color: #19191c;
+  border: 1px solid #232327;
+  border-bottom: 1px solid #28282e;
+  border-radius: 10px;
+  color: #ededf0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
 }
+
 body.theme-dark .app-input {
-  background-color: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-bottom: 2px solid rgba(255, 255, 255, 0.4);
+  background-color: #141416;
+  border: 1px solid #28282e;
+  border-bottom: 2px solid #32323a;
   color: #ffffff;
   border-radius: 6px;
   transition: all 0.15s ease;
 }
+
 body.theme-dark .app-input:focus {
-  background-color: rgba(255, 255, 255, 0.09);
-  border-bottom-color: #ffffff;
+  background-color: #19191c;
+  border-bottom-color: #ededf0;
   outline: none;
 }
+
 body.theme-dark .tool-btn {
-  background-color: rgba(255, 255, 255, 0.06);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: #19191c;
+  color: #ededf0;
+  border: 1px solid #28282e;
   border-radius: 6px;
   transition: all 0.15s ease;
 }
+
 body.theme-dark .tool-btn svg {
   color: #ffffff !important;
   stroke: #ffffff !important;
 }
+
+#btnOpenTutorial svg,
+#btnOpenTutorial svg path {
+  stroke: none !important;
+}
+
+/* ========================================================
+   TUTORIAL MODAL DESIGN SYSTEM (MATCHES APP THEMES)
+   ======================================================== */
+body.theme-dark .tutorial-tab-active {
+  background-color: #242429;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+body.theme-light .tutorial-tab-active {
+  background-color: #ffffff;
+  color: #111113 !important;
+  border: 1px solid #d4d4d8;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+body.theme-dark .tutorial-tab-inactive {
+  color: #a1a1aa;
+}
+body.theme-dark .tutorial-tab-inactive:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+}
+body.theme-light .tutorial-tab-inactive {
+  color: #71717a;
+}
+body.theme-light .tutorial-tab-inactive:hover {
+  background-color: #f4f4f5;
+  color: #111113;
+}
+body.theme-dark .tutorial-badge-active {
+  background-color: #0f1013;
+  color: #ffffff;
+}
+body.theme-light .tutorial-badge-active {
+  background-color: #111113;
+  color: #ffffff;
+}
+body.theme-dark .tutorial-btn-primary {
+  background-color: #232328;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #ffffff !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+body.theme-dark .tutorial-btn-primary:hover {
+  background-color: #2c2c34;
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #ffffff !important;
+}
+body.theme-light .tutorial-btn-primary {
+  background-color: #ffffff;
+  border: 1px solid #d4d4d8;
+  color: #111113 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+body.theme-light .tutorial-btn-primary:hover {
+  background-color: #f4f4f5;
+  border-color: #a1a1aa;
+  color: #000000 !important;
+}
+body.theme-dark .tutorial-callout {
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+body.theme-light .tutorial-callout {
+  background-color: #f7f7f8;
+  border: 1px solid #e4e4e7;
+}
+
 body.theme-dark .tool-btn:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.15);
+  background-color: #232328;
+  border-color: #383842;
+  color: #ffffff;
 }
+
+input:disabled {
+  opacity: 0.38 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+}
+
+.tool-btn:disabled,
+button:disabled {
+  opacity: 0.38 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+}
+
+#airlineDependentControls.pointer-events-none #btnLockGradients,
+#airlineDependentControls.pointer-events-none #btnLockHeaderPos,
+#airlineDependentControls.pointer-events-none #btnLockSizesOffsets {
+  pointer-events: none !important;
+  cursor: not-allowed !important;
+}
+
 body.theme-dark #viewportContainer {
-  background-color: #1a1a1a;
+  background-color: #0d0d0f;
 }
+
 body.theme-dark #viewportToolbar {
-  background-color: #262626;
-  border-color: rgba(255, 255, 255, 0.08);
+  background-color: #141416;
+  border-color: #232327;
 }
+
 body.theme-dark .panel-label {
   color: #d1d5db !important;
   font-weight: 600;
 }
+
 body.theme-dark .panel-muted {
-  color: #9ca3af;
+  color: #8e8e93;
 }
+
 body.theme-dark .text-slate-400,
 body.theme-dark .text-slate-500,
 body.theme-dark .text-slate-600 {
-  color: #d1d5db !important;
+  color: #9ca3af !important;
 }
+
 body.theme-dark .text-slate-300 {
-  color: #ffffff !important;
+  color: #ededf0 !important;
 }
+
 body.theme-dark span,
 body.theme-dark label,
 body.theme-dark p,
 body.theme-dark h1,
 body.theme-dark h2,
 body.theme-dark h3 {
-  color: #ffffff;
+  color: #ededf0;
 }
+
 body.theme-dark .text-sky-500,
 body.theme-dark .text-sky-400,
 body.theme-dark button.text-sky-500 {
   color: #ffffff !important;
 }
+
 body.theme-dark #airlineBadge {
-  color: #ffffff !important;
+  color: #a1a1aa !important;
 }
+
+/* Primary Action Button (Dark Mode: Clean Dark Slate Tool Button) */
 body.theme-dark #btnTopExport:not(:disabled) {
-  background-color: rgba(255, 255, 255, 0.06) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background-color: #232328 !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
   color: #ffffff !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
+
+body.theme-dark #btnTopExport:not(:disabled) span {
+  color: #ffffff !important;
+}
+
+body.theme-dark #btnTopExport:not(:disabled) svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
 body.theme-dark #btnTopExport:not(:disabled):hover {
-  background-color: rgba(255, 255, 255, 0.1) !important;
-  border-color: rgba(255, 255, 255, 0.15) !important;
+  background-color: #2c2c34 !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
   color: #ffffff !important;
+  transform: translateY(-0.5px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
 }
+
 body.theme-dark #btnTopExport:disabled {
   background-color: rgba(255, 255, 255, 0.03) !important;
-  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
   color: rgba(255, 255, 255, 0.3) !important;
   opacity: 0.4;
 }
+
+body.theme-dark #btnTopExport:disabled span {
+  color: rgba(255, 255, 255, 0.3) !important;
+}
+
+body.theme-dark #btnTopExport:disabled svg {
+  color: rgba(255, 255, 255, 0.3) !important;
+  stroke: rgba(255, 255, 255, 0.3) !important;
+}
+
 body.theme-dark select option {
-  background: #2b2b2b;
+  background: #19191c;
   color: #ffffff;
 }
 
-/* Windows 11 Light Mode (Mica & Fluent Surface) */
+body.theme-dark #tabBar {
+  background-color: #141416;
+  border-color: #232327;
+}
+
+/* ========================================================
+   AIRWAYLINK DASHBOARD LIGHT THEME
+   ======================================================== */
 body.theme-light {
-  background-color: #f3f3f3;
-  color: #1b1b1b;
+  background-color: #f7f7f8;
+  color: #111113;
 }
+
 body.theme-light header, body.theme-light footer {
-  background-color: rgba(243, 243, 243, 0.85);
-  border-color: rgba(0, 0, 0, 0.08);
-  backdrop-filter: blur(30px);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  background-color: rgba(255, 255, 255, 0.95);
+  border-color: #ececee;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
 }
+
+body.theme-light .header-logo {
+  filter: none;
+}
+
 body.theme-light aside {
-  background-color: #f3f3f3;
-  border-color: rgba(0, 0, 0, 0.08);
+  background-color: #ffffff;
+  border-color: #ececee;
 }
+
 body.theme-light .panel-card {
   background-color: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-  border-radius: 8px;
-  color: #1b1b1b;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  border: 1px solid #ececee;
+  border-bottom: 1px solid #e2e2e5;
+  border-radius: 10px;
+  color: #111113;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
 }
+
 body.theme-light .app-input {
-  background-color: #ffffff !important;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  border-bottom: 2px solid rgba(0, 0, 0, 0.45);
-  color: #1b1b1b !important;
+  background-color: #f7f7f8 !important;
+  border: 1px solid #e4e4e7;
+  border-bottom: 2px solid #d4d4d8;
+  color: #111113 !important;
   border-radius: 6px;
   transition: all 0.15s ease;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
 }
+
 body.theme-light .app-input:focus {
   background-color: #ffffff !important;
-  border-bottom-color: #1b1b1b;
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+  border-bottom-color: #18181b;
+  box-shadow: 0 0 0 2px rgba(24, 24, 27, 0.08);
   outline: none;
 }
+
 body.theme-light .tool-btn {
-  background-color: rgba(255, 255, 255, 0.7);
-  color: #1b1b1b;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.16);
+  background-color: #f7f7f8;
+  color: #111113;
+  border: 1px solid #e4e4e7;
   border-radius: 6px;
   transition: all 0.15s ease;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
 }
+
 body.theme-light .tool-btn svg {
-  color: #1b1b1b !important;
-  stroke: #1b1b1b !important;
+  color: #111113 !important;
+  stroke: #111113 !important;
 }
+
 body.theme-light .tool-btn:hover {
-  background-color: #ffffff;
-  border-color: rgba(0, 0, 0, 0.16);
+  background-color: #ececee;
+  border-color: #d4d4d8;
 }
+
 body.theme-light #viewportContainer {
-  background-color: #e5e5e5;
+  background-color: #f0f0f3;
 }
+
 body.theme-light #viewportToolbar {
   background-color: #ffffff;
-  border-color: rgba(0, 0, 0, 0.08);
-  box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.03);
+  border-color: #ececee;
+  box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.02);
 }
+
 body.theme-light .panel-label {
-  color: #1b1b1b !important;
+  color: #18181b !important;
   font-weight: 600;
 }
+
 body.theme-light .panel-muted {
-  color: #5c5c5c;
+  color: #71717a;
 }
+
 body.theme-light .border-inherit {
-  border-color: rgba(0, 0, 0, 0.06);
+  border-color: #ececee;
 }
+
 body.theme-light h1,
 body.theme-light h2,
 body.theme-light h3,
 body.theme-light span:not(.text-rose-400):not(.text-emerald-400),
 body.theme-light label,
 body.theme-light p {
-  color: #1b1b1b;
+  color: #111113;
 }
-body.theme-dark #tabBar {
-  background-color: #202020;
-  border-color: rgba(255, 255, 255, 0.08);
-}
+
 body.theme-light #tabBar {
-  background-color: #f3f3f3;
-  border-color: rgba(0, 0, 0, 0.08);
+  background-color: #ffffff;
+  border-color: #ececee;
+  box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.02);
 }
+
 body.theme-light .text-sky-500,
 body.theme-light .text-sky-400,
 body.theme-light button.text-sky-500 {
-  color: #1b1b1b !important;
-}
-body.theme-light .bg-sky-500\/10 {
-  background-color: rgba(0, 0, 0, 0.05) !important;
-}
-body.theme-light .border-sky-500\/30 {
-  border-color: rgba(0, 0, 0, 0.15) !important;
-}
-body.theme-light #airlineBadge {
-  color: #1b1b1b !important;
-}
-body.theme-light #logoPreviewBox {
-  background: #fbfbfb;
-  border: 1px dashed rgba(0, 0, 0, 0.15);
+  color: #18181b !important;
 }
 
-/* Modal Theming: Dark Mode & Light Mode */
+body.theme-light .bg-sky-500\/10 {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+}
+
+body.theme-light .border-sky-500\/30 {
+  border-color: rgba(0, 0, 0, 0.12) !important;
+}
+
+body.theme-light #airlineBadge {
+  color: #71717a !important;
+}
+
+body.theme-light #logoPreviewBox {
+  background: #fbfbfb;
+  border: 1px dashed rgba(0, 0, 0, 0.12);
+}
+
+/* Header Logo Variant Preview Cards (Dark Version = Slate-800, Light Version = Slate-100 for dark logos) */
+#logoVariantCardDark {
+  background-color: #1e293b !important;
+}
+
+#logoVariantCardLight {
+  background-color: #f1f5f9 !important;
+}
+
+#labelLogoVariantDark,
+#logoVariantCardDark > span:first-of-type {
+  color: #cbd5e1 !important;
+}
+
+#logoVariantCardDark:hover #labelLogoVariantDark,
+#logoVariantCardDark:hover > span:first-of-type {
+  color: #ffffff !important;
+}
+
+#labelLogoVariantLight,
+#logoVariantCardLight > span:first-of-type {
+  color: #475569 !important;
+}
+
+#logoVariantCardLight:hover #labelLogoVariantLight,
+#logoVariantCardLight:hover > span:first-of-type {
+  color: #0f172a !important;
+}
+
+#badgeDarkActive,
+#badgeDarkActive span {
+  color: #38bdf8 !important;
+}
+
+#badgeDarkActive span.bg-sky-400 {
+  background-color: #38bdf8 !important;
+}
+
+#badgeLightActive,
+#badgeLightActive span {
+  color: #0284c7 !important;
+}
+
+#badgeLightActive span.bg-sky-500,
+#badgeLightActive span.bg-sky-400 {
+  background-color: #0284c7 !important;
+}
+
+#noDarkLogoLabel {
+  color: #94a3b8 !important;
+}
+
+#noLightLogoLabel {
+  color: #64748b !important;
+}
+
+/* Primary Action Button (Light Mode: Clean Light Tool Button) */
+body.theme-light #btnTopExport:not(:disabled) {
+  background-color: #ffffff !important;
+  border: 1px solid #d4d4d8 !important;
+  color: #111113 !important;
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+body.theme-light #btnTopExport:not(:disabled) span {
+  color: #111113 !important;
+}
+
+body.theme-light #btnTopExport:not(:disabled) svg {
+  color: #111113 !important;
+  stroke: #111113 !important;
+}
+
+body.theme-light #btnTopExport:not(:disabled):hover {
+  background-color: #f4f4f5 !important;
+  border-color: #a1a1aa !important;
+  color: #000000 !important;
+  transform: translateY(-0.5px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+}
+
+body.theme-light #btnTopExport:disabled {
+  background-color: rgba(255, 255, 255, 0.5) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  color: rgba(0, 0, 0, 0.28) !important;
+  opacity: 0.45;
+}
+
+body.theme-light #btnTopExport:disabled span {
+  color: rgba(0, 0, 0, 0.28) !important;
+}
+
+body.theme-light #btnTopExport:disabled svg {
+  color: rgba(0, 0, 0, 0.28) !important;
+  stroke: rgba(0, 0, 0, 0.28) !important;
+}
+
+body.theme-light select option {
+  background: #ffffff;
+  color: #111113;
+}
+
+/* ========================================================
+   MODAL, DROPDOWN & UTILITY THEMING
+   ======================================================== */
 body.theme-dark #airlineModal .modal-container {
-  background-color: #202020;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #ffffff;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+  background-color: #19191c;
+  border: 1px solid #28282e;
+  color: #ededf0;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
 }
 body.theme-dark #airlineModal .modal-header,
 body.theme-dark #airlineModal .modal-footer {
-  background-color: #262626;
-  border-color: rgba(255, 255, 255, 0.08);
+  background-color: #141416;
+  border-color: #232327;
 }
 body.theme-dark #airlineModal .modal-subcard {
-  background-color: #2b2b2b;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #ffffff;
+  background-color: #141416;
+  border: 1px solid #232327;
+  color: #ededf0;
 }
 body.theme-dark #airlineModal .modal-item {
-  background-color: #262626;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #ffffff;
+  background-color: #141416;
+  border: 1px solid #232327;
+  color: #ededf0;
 }
 body.theme-dark #airlineModal .modal-item:hover {
-  border-color: rgba(255, 255, 255, 0.18);
+  border-color: #383842;
+  background-color: #1e1e24;
 }
 body.theme-dark #airlineModal .modal-badge {
-  background-color: #1a1a1a;
+  background-color: #232328;
   color: #38bdf8;
 }
 body.theme-dark #airlineModal .modal-title {
   color: #ffffff !important;
 }
 body.theme-dark #airlineModal .modal-muted {
-  color: #9ca3af !important;
+  color: #8e8e93 !important;
 }
 
 /* Modal Light Mode */
 body.theme-light #airlineModal .modal-container {
-  background-color: #f3f3f3;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  color: #1b1b1b;
-  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+  background-color: #ffffff;
+  border: 1px solid #ececee;
+  color: #111113;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.12);
 }
 body.theme-light #airlineModal .modal-header,
 body.theme-light #airlineModal .modal-footer {
-  background-color: #e5e5e5;
-  border-color: rgba(0, 0, 0, 0.08);
+  background-color: #f7f7f8;
+  border-color: #ececee;
 }
 body.theme-light #airlineModal .modal-subcard {
   background-color: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.14);
-  color: #1b1b1b;
+  border: 1px solid #ececee;
+  color: #111113;
 }
 body.theme-light #airlineModal .modal-item {
   background-color: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  color: #1b1b1b;
+  border: 1px solid #ececee;
+  color: #111113;
 }
 body.theme-light #airlineModal .modal-item:hover {
-  border-color: rgba(0, 0, 0, 0.18);
-  background-color: #fafafa;
+  border-color: #d4d4d8;
+  background-color: #f7f7f8;
 }
 body.theme-light #airlineModal .modal-badge {
-  background-color: #e5e5e5;
+  background-color: #f0f0f3;
   color: #0369a1;
 }
 body.theme-light #airlineModal .modal-title {
-  color: #1b1b1b !important;
+  color: #111113 !important;
 }
 body.theme-light #airlineModal .modal-muted {
-  color: #5c5c5c !important;
+  color: #71717a !important;
 }
 body.theme-light #footerSizeBadge {
   background-color: #ffffff;
-  color: #1b1b1b;
-  border-color: rgba(0, 0, 0, 0.08);
+  color: #111113;
+  border-color: #ececee;
 }
 body.theme-light .inline-flex.rounded-md {
-  background-color: rgba(0, 0, 0, 0.05);
-  border-color: rgba(0, 0, 0, 0.08);
+  background-color: rgba(0, 0, 0, 0.04);
+  border-color: #ececee;
 }
 body.theme-light #btnModeText {
-  color: #5c5c5c;
+  color: #71717a;
 }
 body.theme-light #btnModeText:hover {
-  color: #1b1b1b;
+  color: #111113;
 }
-body.theme-light #btnTopExport:not(:disabled) {
-  background-color: rgba(255, 255, 255, 0.7) !important;
-  border: 1px solid rgba(0, 0, 0, 0.08) !important;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.16) !important;
-  color: #1b1b1b !important;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-}
-body.theme-light #btnTopExport:not(:disabled):hover {
-  background-color: #ffffff !important;
-  border-color: rgba(0, 0, 0, 0.16) !important;
-  color: #1b1b1b !important;
-}
-body.theme-light #btnTopExport:disabled {
-  background-color: rgba(255, 255, 255, 0.35) !important;
-  border: 1px solid rgba(0, 0, 0, 0.05) !important;
-  color: rgba(0, 0, 0, 0.3) !important;
-  opacity: 0.4;
-}
-body.theme-light select option {
-  background: #ffffff;
-  color: #1b1b1b;
-}
-body.theme-dark h2,
-body.theme-dark h3,
-.airplane-add-icon {
-  width: 17px;
-  height: 17px;
-  display: inline-block;
-  mask: url("./assets/airwaylink-mask.png") center/contain no-repeat;
-  -webkit-mask: url("./assets/airwaylink-mask.png") center/contain no-repeat;
-  background-color: currentColor;
-}
-body.theme-dark .tool-btn .airplane-add-icon {
-  width: 17px;
-  height: 17px;
-  display: inline-block;
-  mask: url("./assets/airwaylink-mask.png") center/contain no-repeat;
-  -webkit-mask: url("./assets/airwaylink-mask.png") center/contain no-repeat;
-  background-color: currentColor;
-}
-body.theme-light .tool-btn .airplane-add-icon {
-  width: 17px;
-  height: 17px;
-  display: inline-block;
-  mask: url("./assets/airwaylink-mask.png") center/contain no-repeat;
-  -webkit-mask: url("./assets/airwaylink-mask.png") center/contain no-repeat;
-  background-color: currentColor;
-}
+
 body.theme-dark #auth0Dropdown {
-  background-color: #202020;
-  border-color: #3f3f46;
-  color: #f4f4f5;
+  background-color: #19191c;
+  border-color: #28282e;
+  color: #ededf0;
 }
 body.theme-light #auth0Dropdown {
   background-color: #ffffff;
-  border-color: #e4e4e7;
-  color: #18181b;
+  border-color: #ececee;
+  color: #111113;
+}
+
+/* API Refresh Status Flash Animations & Error Notice */
+@keyframes flash-green-3 {
+  0%, 33%, 66% {
+    background-color: rgba(34, 197, 94, 0.35);
+    border-color: #22c55e !important;
+    box-shadow: 0 0 12px rgba(34, 197, 94, 0.65);
+  }
+  16%, 49%, 83%, 100% {
+    background-color: transparent;
+    box-shadow: none;
+  }
+}
+
+@keyframes flash-red-3 {
+  0%, 33%, 66% {
+    background-color: rgba(239, 68, 68, 0.35);
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.65);
+  }
+  16%, 49%, 83%, 100% {
+    background-color: transparent;
+    box-shadow: none;
+  }
+}
+
+body.theme-dark .tool-btn.flash-success-3,
+body.theme-light .tool-btn.flash-success-3 {
+  animation: flash-green-3 1.2s ease-in-out forwards !important;
+}
+body.theme-dark .tool-btn.flash-success-3 svg,
+body.theme-light .tool-btn.flash-success-3 svg {
+  color: #22c55e !important;
+  stroke: #22c55e !important;
+}
+
+body.theme-dark .tool-btn.flash-error-3,
+body.theme-light .tool-btn.flash-error-3 {
+  animation: flash-red-3 1.2s ease-in-out forwards !important;
+}
+body.theme-dark .tool-btn.flash-error-3 svg,
+body.theme-light .tool-btn.flash-error-3 svg {
+  color: #ef4444 !important;
+  stroke: #ef4444 !important;
+}
+
+body.theme-dark #apiErrorNotice {
+  background-color: #19191c;
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #ededf0;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+}
+body.theme-light #apiErrorNotice {
+  background-color: #ffffff;
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #111113;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.12);
+}
+body.theme-light #apiErrorNotice #apiErrorMessage {
+  color: #4b5563;
 }
 body.theme-dark div {
   color-scheme: dark;

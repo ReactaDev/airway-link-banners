@@ -1,0 +1,776 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base Font stack */
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-hud { font-family: 'Chakra Petch', sans-serif; }
+.font-mono-avionics { font-family: 'JetBrains Mono', monospace; }
+.font-montserrat { font-family: 'Montserrat', sans-serif; }
+.font-barlow { font-family: 'Barlow', sans-serif; }
+.font-oswald { font-family: 'Oswald', sans-serif; }
+.font-cinzel { font-family: 'Cinzel', serif; }
+.font-outfit { font-family: 'Outfit', sans-serif; }
+.font-prompt { font-family: 'Prompt', sans-serif; }
+.font-plus-jakarta { font-family: 'Plus Jakarta Sans', sans-serif; }
+.font-urbanist { font-family: 'Urbanist', sans-serif; }
+.font-space-grotesk { font-family: 'Space Grotesk', sans-serif; }
+.font-dm-sans { font-family: 'DM Sans', sans-serif; }
+.font-rajdhani { font-family: 'Rajdhani', sans-serif; }
+.font-teko { font-family: 'Teko', sans-serif; }
+.font-syne { font-family: 'Syne', sans-serif; }
+
+/* ========================================================
+   AIRWAYLINK DASHBOARD DESIGN SYSTEM (DARK & LIGHT)
+   ======================================================== */
+
+/* Modern Custom Range Sliders */
+input[type=range] {
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 9999px;
+  height: 4px;
+  outline: none;
+  transition: background 0.15s ease;
+}
+.theme-dark input[type=range] {
+  background: #28282e;
+}
+.theme-dark input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  background: #ededf0;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  transition: transform 0.1s ease, background-color 0.15s ease;
+}
+.theme-dark input[type=range]::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  background: #ffffff;
+}
+.theme-dark input[type=range]::-moz-range-thumb {
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  background: #ededf0;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.theme-light input[type=range] {
+  background: #e4e4e7;
+}
+.theme-light input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  background: #18181b;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.1s ease, background-color 0.15s ease;
+}
+.theme-light input[type=range]::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  background: #000000;
+}
+.theme-light input[type=range]::-moz-range-thumb {
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  background: #18181b;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Scrollbars (Airwaylink Dashboard Minimal Overlay) */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
+::-webkit-scrollbar-corner { background: transparent; }
+.theme-dark ::-webkit-scrollbar-track { background: transparent; }
+.theme-dark ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 9999px; }
+.theme-dark ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.28); }
+
+.theme-light ::-webkit-scrollbar-track { background: transparent; }
+.theme-light ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.15); border-radius: 9999px; }
+.theme-light ::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.28); }
+
+/* Viewport Clean Grid Pattern */
+.hud-grid-pattern { background-size: 28px 28px; }
+.theme-dark .hud-grid-pattern {
+  background-image: none !important;
+}
+.theme-light .hud-grid-pattern {
+  background-image: 
+    radial-gradient(circle, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
+}
+
+/* ========================================================
+   AIRWAYLINK DASHBOARD DARK THEME
+   ======================================================== */
+body.theme-dark {
+  background-color: #141416;
+  color: #ededf0;
+}
+
+body.theme-dark header, body.theme-dark footer {
+  background-color: rgba(17, 17, 19, 0.95);
+  border-color: #232327;
+  backdrop-filter: blur(20px);
+}
+
+body.theme-dark .header-logo {
+  filter: invert(1);
+}
+
+body.theme-dark aside {
+  background-color: #141416;
+  border-color: #232327;
+}
+
+body.theme-dark .panel-card {
+  background-color: #19191c;
+  border: 1px solid #232327;
+  border-bottom: 1px solid #28282e;
+  border-radius: 10px;
+  color: #ededf0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+body.theme-dark .app-input {
+  background-color: #141416;
+  border: 1px solid #28282e;
+  border-bottom: 2px solid #32323a;
+  color: #ffffff;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+body.theme-dark .app-input:focus {
+  background-color: #19191c;
+  border-bottom-color: #ededf0;
+  outline: none;
+}
+
+body.theme-dark .tool-btn {
+  background-color: #19191c;
+  color: #ededf0;
+  border: 1px solid #28282e;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+body.theme-dark .tool-btn svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+#btnOpenTutorial svg,
+#btnOpenTutorial svg path {
+  stroke: none !important;
+}
+
+/* ========================================================
+   TUTORIAL MODAL DESIGN SYSTEM (MATCHES APP THEMES)
+   ======================================================== */
+body.theme-dark .tutorial-tab-active {
+  background-color: #242429;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+body.theme-light .tutorial-tab-active {
+  background-color: #ffffff;
+  color: #111113 !important;
+  border: 1px solid #d4d4d8;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+body.theme-dark .tutorial-tab-inactive {
+  color: #a1a1aa;
+}
+body.theme-dark .tutorial-tab-inactive:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+}
+body.theme-light .tutorial-tab-inactive {
+  color: #71717a;
+}
+body.theme-light .tutorial-tab-inactive:hover {
+  background-color: #f4f4f5;
+  color: #111113;
+}
+body.theme-dark .tutorial-badge-active {
+  background-color: #0f1013;
+  color: #ffffff;
+}
+body.theme-light .tutorial-badge-active {
+  background-color: #111113;
+  color: #ffffff;
+}
+body.theme-dark .tutorial-btn-primary {
+  background-color: #232328;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #ffffff !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+body.theme-dark .tutorial-btn-primary:hover {
+  background-color: #2c2c34;
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #ffffff !important;
+}
+body.theme-light .tutorial-btn-primary {
+  background-color: #ffffff;
+  border: 1px solid #d4d4d8;
+  color: #111113 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+body.theme-light .tutorial-btn-primary:hover {
+  background-color: #f4f4f5;
+  border-color: #a1a1aa;
+  color: #000000 !important;
+}
+body.theme-dark .tutorial-callout {
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+body.theme-light .tutorial-callout {
+  background-color: #f7f7f8;
+  border: 1px solid #e4e4e7;
+}
+
+body.theme-dark .tool-btn:hover {
+  background-color: #232328;
+  border-color: #383842;
+  color: #ffffff;
+}
+
+input:disabled {
+  opacity: 0.38 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+}
+
+.tool-btn:disabled,
+button:disabled {
+  opacity: 0.38 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+}
+
+#airlineDependentControls.pointer-events-none #btnLockGradients,
+#airlineDependentControls.pointer-events-none #btnLockHeaderPos,
+#airlineDependentControls.pointer-events-none #btnLockSizesOffsets {
+  pointer-events: none !important;
+  cursor: not-allowed !important;
+}
+
+body.theme-dark #viewportContainer {
+  background-color: #0d0d0f;
+}
+
+body.theme-dark #viewportToolbar {
+  background-color: #141416;
+  border-color: #232327;
+}
+
+body.theme-dark .panel-label {
+  color: #d1d5db !important;
+  font-weight: 600;
+}
+
+body.theme-dark .panel-muted {
+  color: #8e8e93;
+}
+
+body.theme-dark .text-slate-400,
+body.theme-dark .text-slate-500,
+body.theme-dark .text-slate-600 {
+  color: #9ca3af !important;
+}
+
+body.theme-dark .text-slate-300 {
+  color: #ededf0 !important;
+}
+
+body.theme-dark span,
+body.theme-dark label,
+body.theme-dark p,
+body.theme-dark h1,
+body.theme-dark h2,
+body.theme-dark h3 {
+  color: #ededf0;
+}
+
+body.theme-dark .text-sky-500,
+body.theme-dark .text-sky-400,
+body.theme-dark button.text-sky-500 {
+  color: #ffffff !important;
+}
+
+body.theme-dark #airlineBadge {
+  color: #a1a1aa !important;
+}
+
+/* Primary Action Button (Dark Mode: Clean Dark Slate Tool Button) */
+body.theme-dark #btnTopExport:not(:disabled) {
+  background-color: #232328 !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  color: #ffffff !important;
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+body.theme-dark #btnTopExport:not(:disabled) span {
+  color: #ffffff !important;
+}
+
+body.theme-dark #btnTopExport:not(:disabled) svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+body.theme-dark #btnTopExport:not(:disabled):hover {
+  background-color: #2c2c34 !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  color: #ffffff !important;
+  transform: translateY(-0.5px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
+}
+
+body.theme-dark #btnTopExport:disabled {
+  background-color: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  color: rgba(255, 255, 255, 0.3) !important;
+  opacity: 0.4;
+}
+
+body.theme-dark #btnTopExport:disabled span {
+  color: rgba(255, 255, 255, 0.3) !important;
+}
+
+body.theme-dark #btnTopExport:disabled svg {
+  color: rgba(255, 255, 255, 0.3) !important;
+  stroke: rgba(255, 255, 255, 0.3) !important;
+}
+
+body.theme-dark select option {
+  background: #19191c;
+  color: #ffffff;
+}
+
+body.theme-dark #tabBar {
+  background-color: #141416;
+  border-color: #232327;
+}
+
+/* ========================================================
+   AIRWAYLINK DASHBOARD LIGHT THEME
+   ======================================================== */
+body.theme-light {
+  background-color: #f7f7f8;
+  color: #111113;
+}
+
+body.theme-light header, body.theme-light footer {
+  background-color: rgba(255, 255, 255, 0.95);
+  border-color: #ececee;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+body.theme-light .header-logo {
+  filter: none;
+}
+
+body.theme-light aside {
+  background-color: #ffffff;
+  border-color: #ececee;
+}
+
+body.theme-light .panel-card {
+  background-color: #ffffff;
+  border: 1px solid #ececee;
+  border-bottom: 1px solid #e2e2e5;
+  border-radius: 10px;
+  color: #111113;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+body.theme-light .app-input {
+  background-color: #f7f7f8 !important;
+  border: 1px solid #e4e4e7;
+  border-bottom: 2px solid #d4d4d8;
+  color: #111113 !important;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+body.theme-light .app-input:focus {
+  background-color: #ffffff !important;
+  border-bottom-color: #18181b;
+  box-shadow: 0 0 0 2px rgba(24, 24, 27, 0.08);
+  outline: none;
+}
+
+body.theme-light .tool-btn {
+  background-color: #f7f7f8;
+  color: #111113;
+  border: 1px solid #e4e4e7;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+body.theme-light .tool-btn svg {
+  color: #111113 !important;
+  stroke: #111113 !important;
+}
+
+body.theme-light .tool-btn:hover {
+  background-color: #ececee;
+  border-color: #d4d4d8;
+}
+
+body.theme-light #viewportContainer {
+  background-color: #f0f0f3;
+}
+
+body.theme-light #viewportToolbar {
+  background-color: #ffffff;
+  border-color: #ececee;
+  box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.02);
+}
+
+body.theme-light .panel-label {
+  color: #18181b !important;
+  font-weight: 600;
+}
+
+body.theme-light .panel-muted {
+  color: #71717a;
+}
+
+body.theme-light .border-inherit {
+  border-color: #ececee;
+}
+
+body.theme-light h1,
+body.theme-light h2,
+body.theme-light h3,
+body.theme-light span:not(.text-rose-400):not(.text-emerald-400),
+body.theme-light label,
+body.theme-light p {
+  color: #111113;
+}
+
+body.theme-light #tabBar {
+  background-color: #ffffff;
+  border-color: #ececee;
+  box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.02);
+}
+
+body.theme-light .text-sky-500,
+body.theme-light .text-sky-400,
+body.theme-light button.text-sky-500 {
+  color: #18181b !important;
+}
+
+body.theme-light .bg-sky-500\/10 {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+}
+
+body.theme-light .border-sky-500\/30 {
+  border-color: rgba(0, 0, 0, 0.12) !important;
+}
+
+body.theme-light #airlineBadge {
+  color: #71717a !important;
+}
+
+body.theme-light #logoPreviewBox {
+  background: #fbfbfb;
+  border: 1px dashed rgba(0, 0, 0, 0.12);
+}
+
+/* Header Logo Variant Preview Cards (Dark Version = Slate-800, Light Version = Slate-100 for dark logos) */
+#logoVariantCardDark {
+  background-color: #1e293b !important;
+}
+
+#logoVariantCardLight {
+  background-color: #f1f5f9 !important;
+}
+
+#labelLogoVariantDark,
+#logoVariantCardDark > span:first-of-type {
+  color: #cbd5e1 !important;
+}
+
+#logoVariantCardDark:hover #labelLogoVariantDark,
+#logoVariantCardDark:hover > span:first-of-type {
+  color: #ffffff !important;
+}
+
+#labelLogoVariantLight,
+#logoVariantCardLight > span:first-of-type {
+  color: #475569 !important;
+}
+
+#logoVariantCardLight:hover #labelLogoVariantLight,
+#logoVariantCardLight:hover > span:first-of-type {
+  color: #0f172a !important;
+}
+
+#badgeDarkActive,
+#badgeDarkActive span {
+  color: #38bdf8 !important;
+}
+
+#badgeDarkActive span.bg-sky-400 {
+  background-color: #38bdf8 !important;
+}
+
+#badgeLightActive,
+#badgeLightActive span {
+  color: #0284c7 !important;
+}
+
+#badgeLightActive span.bg-sky-500,
+#badgeLightActive span.bg-sky-400 {
+  background-color: #0284c7 !important;
+}
+
+#noDarkLogoLabel {
+  color: #94a3b8 !important;
+}
+
+#noLightLogoLabel {
+  color: #64748b !important;
+}
+
+/* Primary Action Button (Light Mode: Clean Light Tool Button) */
+body.theme-light #btnTopExport:not(:disabled) {
+  background-color: #ffffff !important;
+  border: 1px solid #d4d4d8 !important;
+  color: #111113 !important;
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+body.theme-light #btnTopExport:not(:disabled) span {
+  color: #111113 !important;
+}
+
+body.theme-light #btnTopExport:not(:disabled) svg {
+  color: #111113 !important;
+  stroke: #111113 !important;
+}
+
+body.theme-light #btnTopExport:not(:disabled):hover {
+  background-color: #f4f4f5 !important;
+  border-color: #a1a1aa !important;
+  color: #000000 !important;
+  transform: translateY(-0.5px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+}
+
+body.theme-light #btnTopExport:disabled {
+  background-color: rgba(255, 255, 255, 0.5) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  color: rgba(0, 0, 0, 0.28) !important;
+  opacity: 0.45;
+}
+
+body.theme-light #btnTopExport:disabled span {
+  color: rgba(0, 0, 0, 0.28) !important;
+}
+
+body.theme-light #btnTopExport:disabled svg {
+  color: rgba(0, 0, 0, 0.28) !important;
+  stroke: rgba(0, 0, 0, 0.28) !important;
+}
+
+body.theme-light select option {
+  background: #ffffff;
+  color: #111113;
+}
+
+/* ========================================================
+   MODAL, DROPDOWN & UTILITY THEMING
+   ======================================================== */
+body.theme-dark #airlineModal .modal-container {
+  background-color: #19191c;
+  border: 1px solid #28282e;
+  color: #ededf0;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+}
+body.theme-dark #airlineModal .modal-header,
+body.theme-dark #airlineModal .modal-footer {
+  background-color: #141416;
+  border-color: #232327;
+}
+body.theme-dark #airlineModal .modal-subcard {
+  background-color: #141416;
+  border: 1px solid #232327;
+  color: #ededf0;
+}
+body.theme-dark #airlineModal .modal-item {
+  background-color: #141416;
+  border: 1px solid #232327;
+  color: #ededf0;
+}
+body.theme-dark #airlineModal .modal-item:hover {
+  border-color: #383842;
+  background-color: #1e1e24;
+}
+body.theme-dark #airlineModal .modal-badge {
+  background-color: #232328;
+  color: #38bdf8;
+}
+body.theme-dark #airlineModal .modal-title {
+  color: #ffffff !important;
+}
+body.theme-dark #airlineModal .modal-muted {
+  color: #8e8e93 !important;
+}
+
+/* Modal Light Mode */
+body.theme-light #airlineModal .modal-container {
+  background-color: #ffffff;
+  border: 1px solid #ececee;
+  color: #111113;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.12);
+}
+body.theme-light #airlineModal .modal-header,
+body.theme-light #airlineModal .modal-footer {
+  background-color: #f7f7f8;
+  border-color: #ececee;
+}
+body.theme-light #airlineModal .modal-subcard {
+  background-color: #ffffff;
+  border: 1px solid #ececee;
+  color: #111113;
+}
+body.theme-light #airlineModal .modal-item {
+  background-color: #ffffff;
+  border: 1px solid #ececee;
+  color: #111113;
+}
+body.theme-light #airlineModal .modal-item:hover {
+  border-color: #d4d4d8;
+  background-color: #f7f7f8;
+}
+body.theme-light #airlineModal .modal-badge {
+  background-color: #f0f0f3;
+  color: #0369a1;
+}
+body.theme-light #airlineModal .modal-title {
+  color: #111113 !important;
+}
+body.theme-light #airlineModal .modal-muted {
+  color: #71717a !important;
+}
+body.theme-light #footerSizeBadge {
+  background-color: #ffffff;
+  color: #111113;
+  border-color: #ececee;
+}
+body.theme-light .inline-flex.rounded-md {
+  background-color: rgba(0, 0, 0, 0.04);
+  border-color: #ececee;
+}
+body.theme-light #btnModeText {
+  color: #71717a;
+}
+body.theme-light #btnModeText:hover {
+  color: #111113;
+}
+
+body.theme-dark #auth0Dropdown {
+  background-color: #19191c;
+  border-color: #28282e;
+  color: #ededf0;
+}
+body.theme-light #auth0Dropdown {
+  background-color: #ffffff;
+  border-color: #ececee;
+  color: #111113;
+}
+
+/* API Refresh Status Flash Animations & Error Notice */
+@keyframes flash-green-3 {
+  0%, 33%, 66% {
+    background-color: rgba(34, 197, 94, 0.35);
+    border-color: #22c55e !important;
+    box-shadow: 0 0 12px rgba(34, 197, 94, 0.65);
+  }
+  16%, 49%, 83%, 100% {
+    background-color: transparent;
+    box-shadow: none;
+  }
+}
+
+@keyframes flash-red-3 {
+  0%, 33%, 66% {
+    background-color: rgba(239, 68, 68, 0.35);
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.65);
+  }
+  16%, 49%, 83%, 100% {
+    background-color: transparent;
+    box-shadow: none;
+  }
+}
+
+body.theme-dark .tool-btn.flash-success-3,
+body.theme-light .tool-btn.flash-success-3 {
+  animation: flash-green-3 1.2s ease-in-out forwards !important;
+}
+body.theme-dark .tool-btn.flash-success-3 svg,
+body.theme-light .tool-btn.flash-success-3 svg {
+  color: #22c55e !important;
+  stroke: #22c55e !important;
+}
+
+body.theme-dark .tool-btn.flash-error-3,
+body.theme-light .tool-btn.flash-error-3 {
+  animation: flash-red-3 1.2s ease-in-out forwards !important;
+}
+body.theme-dark .tool-btn.flash-error-3 svg,
+body.theme-light .tool-btn.flash-error-3 svg {
+  color: #ef4444 !important;
+  stroke: #ef4444 !important;
+}
+
+body.theme-dark #apiErrorNotice {
+  background-color: #19191c;
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #ededf0;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+}
+body.theme-light #apiErrorNotice {
+  background-color: #ffffff;
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #111113;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.12);
+}
+body.theme-light #apiErrorNotice #apiErrorMessage {
+  color: #4b5563;
+}
+body.theme-dark div {
+  color-scheme: dark;
+}
